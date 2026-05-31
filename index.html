@@ -49,8 +49,6 @@
   .sidebar-info-panel.open{max-height:700px;opacity:1;margin-top:40px;}
   .sidebar-avatar{width:80px;height:80px;border-radius:50%;background:none;border:none;margin-bottom:0;flex-shrink:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
   .sidebar-avatar img{width:80px;height:80px;object-fit:contain;display:block;}
-  .sidebar-avatar .img-hover{position:absolute;top:0;left:0;width:80px;height:80px;object-fit:contain;opacity:0;transition:opacity .35s ease;}
-  .avatar-wrap:hover .img-hover{opacity:1;}
   .avatar-wrap{position:relative;display:inline-block;margin-bottom:20px;}
   .avatar-wrap .sidebar-avatar{margin-bottom:0;}
   .avatar-bubble{position:fixed;background:var(--txt);color:var(--bg);font-size:.75rem;font-weight:600;padding:6px 14px;border-radius:20px;white-space:nowrap;opacity:0;transform:scale(.85) translate(4px,-4px);transform-origin:bottom left;transition:opacity .2s ease,transform .2s ease;pointer-events:none;z-index:9999;}
@@ -179,7 +177,7 @@
     <button class="contact-send" id="btnSend">Send Message</button>
   </div>
   <div class="sidebar-info-panel" id="infoPanel">
-    <div class="avatar-wrap"><div class="sidebar-avatar"><img src="r_profile.png" alt="profile"/><img src="r_profile2.png" class="img-hover" alt="profile hover"/></div><span class="avatar-bubble">hello 👋</span></div>
+    <div class="avatar-wrap"><div class="sidebar-avatar"><img id="avatarImg" src="r_profile.svg" alt="profile" style="transition:opacity .25s ease;"/></div><span class="avatar-bubble">hello 👋</span></div>
     <div class="info-row">
       <span class="info-label">Name</span>
       <span class="info-value">Changrok Choi</span>
@@ -474,6 +472,8 @@ window.addEventListener('scroll', function(){
     var wrap = document.querySelector('.avatar-wrap');
     var bubble = document.querySelector('.avatar-bubble');
     if(!wrap || !bubble) return;
+    var avatarImg = document.getElementById('avatarImg');
+    if(avatarImg){ wrap.addEventListener('mouseenter', function(){ avatarImg.src='r_profile2.svg'; }); wrap.addEventListener('mouseleave', function(){ avatarImg.src='r_profile.svg'; }); }
     wrap.addEventListener('mouseenter', function(){
       var r = wrap.getBoundingClientRect();
       bubble.style.left = (r.right - 14) + 'px';
