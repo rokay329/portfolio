@@ -473,7 +473,7 @@ window.addEventListener('scroll', function(){
     var bubble = document.querySelector('.avatar-bubble');
     if(!wrap || !bubble) return;
     var avatarImg = document.getElementById('avatarImg');
-    if(avatarImg){ wrap.addEventListener('mouseenter', function(){ avatarImg.src='r_profile2.svg'; }); wrap.addEventListener('mouseleave', function(){ avatarImg.src='r_profile.svg'; }); wrap.addEventListener('click', function(){ avatarImg.src = avatarImg.src.includes('r_profile2') ? 'r_profile.svg' : 'r_profile2.svg'; }); }
+    if(avatarImg){ wrap.addEventListener('mouseenter', function(){ avatarImg.src='r_profile2.svg'; }); wrap.addEventListener('mouseleave', function(){ avatarImg.src='r_profile.svg'; }); wrap.addEventListener('click', function(){ if(window.innerWidth<=900){ avatarImg.src = avatarImg.src.includes('r_profile2') ? 'r_profile.svg' : 'r_profile2.svg'; bubble.style.opacity='0'; } }); }
     wrap.addEventListener('mouseenter', function(){
       var r = wrap.getBoundingClientRect();
       bubble.style.left = (r.right - 14) + 'px';
