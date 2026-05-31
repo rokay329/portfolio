@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>rokay — Portfolio</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+  :root {
+    --bg:#faf9f7; --sf:#f2f1ee; --bd:#e4e2dd;
+    --txt:#111; --mut:#555; --dim:#767676;
+    --red:#e03a1e;
+    --sidebar:300px;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{background:var(--bg);color:var(--txt);font-family:'Pretendard',sans-serif;-webkit-font-smoothing:antialiased;display:flex;}
+
+  #scrollLine{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:999;width:0;pointer-events:none;}
+
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);
+    padding:48px 40px;display:flex;flex-direction:column;
+    border-right:1px solid var(--bd);background:var(--bg);z-index:100;overflow-y:auto;
+  }
+  .sidebar-logo{font-size:2.2rem;font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:32px;cursor:pointer;}
+  .sidebar-logo:hover{opacity:.75;}
+  .sidebar-bio{font-size:.82rem;color:var(--mut);line-height:1.85;margin-bottom:32px;}
+  .sidebar-btns{display:flex;gap:10px;margin-bottom:0;}
+
+  .btn-info,.btn-contact{
+    font-size:.72rem;font-weight:600;letter-spacing:.04em;
+    padding:9px 20px;border-radius:40px;cursor:pointer;
+    transition:all .15s;border:2px solid var(--txt);
+    font-family:'Pretendard',sans-serif;
+  }
+  .btn-info{background:var(--txt);color:#fff;}
+  .btn-info:hover{opacity:.8;}
+  .btn-info.active{background:var(--red);border-color:var(--red);}
+  .btn-contact{background:var(--txt);color:#fff;}
+  .btn-contact:hover{opacity:.8;}
+
+  /* INFO PANEL */
+  .sidebar-info-panel{
+    overflow:hidden;max-height:0;opacity:0;margin-top:0;
+    transition:max-height .35s ease, opacity .3s ease, margin-top .3s ease;
+  }
+  .sidebar-info-panel.open{max-height:700px;opacity:1;margin-top:40px;}
+  .sidebar-avatar{width:80px;height:80px;border-radius:50%;background:none;border:none;margin-bottom:0;flex-shrink:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .sidebar-avatar img{width:80px;height:80px;object-fit:contain;display:block;}
+  .sidebar-avatar .img-hover{position:absolute;top:0;left:0;width:80px;height:80px;object-fit:contain;opacity:0;transition:opacity .35s ease;}
+  .avatar-wrap:hover .img-hover{opacity:1;}
+  .avatar-wrap{position:relative;display:inline-block;margin-bottom:20px;}
+  .avatar-wrap .sidebar-avatar{margin-bottom:0;}
+  .avatar-bubble{position:fixed;background:var(--txt);color:var(--bg);font-size:.75rem;font-weight:600;padding:6px 14px;border-radius:20px;white-space:nowrap;opacity:0;transform:scale(.85) translate(4px,-4px);transform-origin:bottom left;transition:opacity .2s ease,transform .2s ease;pointer-events:none;z-index:9999;}
+  .avatar-bubble::after{content:'';position:absolute;bottom:-6px;left:8px;width:0;height:0;border-top:7px solid var(--txt);border-right:7px solid transparent;border-left:0;border-bottom:0;}
+  .info-row{display:flex;flex-direction:column;gap:6px;margin-bottom:28px;}
+  .info-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);}
+  .info-exp{display:flex;gap:16px;margin-top:4px;}
+  .info-exp-item{display:flex;flex-direction:column;gap:2px;}
+  .info-exp-n{font-size:1.6rem;font-weight:700;letter-spacing:-.04em;color:var(--txt);line-height:1;}
+  .info-exp-l{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);}
+  .info-skill-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+  .info-skill-item{display:flex;align-items:baseline;gap:12px;}
+  .info-skill-n{font-size:.58rem;font-weight:700;color:var(--dim);letter-spacing:.08em;min-width:18px;}
+  .info-skill-name{font-size:.8rem;color:var(--txt);font-weight:500;}
+
+  /* CONTACT PANEL */
+  .sidebar-contact-panel{overflow:hidden;max-height:0;opacity:0;margin-top:0;transition:max-height .35s ease, opacity .3s ease, margin-top .3s ease;}
+  .sidebar-contact-panel.open{max-height:600px;opacity:1;margin-top:40px;}
+  .contact-field{display:flex;flex-direction:column;gap:6px;margin-bottom:24px;}
+  .contact-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);}
+  .contact-input,.contact-textarea{background:transparent;border:none;border-bottom:1px solid var(--bd);border-radius:0;padding:8px 0;font-size:.78rem;color:var(--txt);font-family:'Pretendard',sans-serif;outline:none;transition:border-color .15s;resize:none;width:100%;}
+  .contact-input:focus,.contact-textarea:focus{border-bottom-color:var(--txt);}
+  .contact-textarea{height:90px;line-height:1.6;}
+  .contact-send{width:100%;padding:10px;border-radius:40px;background:var(--txt);color:#fff;font-size:.72rem;font-weight:600;letter-spacing:.04em;font-family:'Pretendard',sans-serif;border:none;cursor:pointer;transition:opacity .15s;margin-top:4px;}
+  .contact-send:hover{opacity:.8;}
+  .btn-contact.active{background:var(--red);border-color:var(--red);}
+
+  /* MAIN */
+  #listView{flex:1;min-width:0;display:flex;flex-direction:column;margin-left:var(--sidebar);}
+  #detailView{display:none;flex:1;min-width:0;margin-left:var(--sidebar);min-height:100vh;}
+  .main{flex:1;min-height:100vh;padding:48px 40px 120px;}
+
+  .works-heading{font-size:2rem;font-weight:700;letter-spacing:-.04em;margin-bottom:32px;}
+
+  .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
+  .fb{font-size:.72rem;font-weight:600;letter-spacing:.04em;font-family:'Pretendard',sans-serif;border:2px solid var(--bd);background:transparent;color:var(--mut);padding:9px 20px;border-radius:40px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .fb:hover{border-color:var(--txt);color:var(--txt);}
+  .fb.active{background:var(--txt);color:#fff;border-color:var(--txt);}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+  .gi{cursor:pointer;overflow:hidden;}
+  .gi.hidden{display:none;}
+  .gi:hover .gi-title{text-decoration:underline;text-underline-offset:3px;}
+  .gi-thumb{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .gi-thumb-label{font-size:.58rem;font-family:'Pretendard',sans-serif;color:rgba(0,0,0,.3);letter-spacing:.1em;}
+  .gi-thumb img,.gi-thumb svg{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+  .gi:hover .gi-thumb img,.gi:hover .gi-thumb svg{transform:scale(1.03);}
+  .gi-body{padding:14px 0 8px;}
+  .gi-title{font-size:.95rem;font-weight:600;letter-spacing:-.02em;margin-bottom:5px;line-height:1.3;}
+  .gi-desc{font-size:.75rem;color:var(--dim);line-height:1.7;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+
+  /* DETAIL VIEW */
+  .dv-hero{width:100%;aspect-ratio:16/6;overflow:hidden;background:var(--sf);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--bd);}
+  .dv-hero svg{width:100%;height:100%;display:block;}
+  .dv-wrap{max-width:860px;padding:64px 56px 120px;}
+  .dv-bread{font-size:.68rem;font-family:'Pretendard',sans-serif;color:var(--dim);display:flex;align-items:center;gap:8px;margin-bottom:40px;cursor:pointer;}
+  .dv-bread:hover{color:var(--txt);}
+  .dv-client{font-size:.68rem;font-family:'Pretendard',sans-serif;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+  .dv-title{font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:8px;}
+  .dv-subtitle{font-size:.85rem;color:var(--mut);font-family:'Pretendard',sans-serif;margin-bottom:24px;}
+  .dv-meta-row{display:flex;flex-wrap:wrap;gap:7px;padding-bottom:40px;border-bottom:1px solid var(--bd);margin-bottom:52px;}
+  .dv-tag{font-size:.65rem;font-family:'Pretendard',sans-serif;border:1px solid var(--bd);color:var(--dim);padding:4px 11px;border-radius:20px;}
+  .dv-ongoing{font-size:.65rem;font-family:'Pretendard',sans-serif;background:var(--txt);color:#fff;padding:4px 11px;border-radius:20px;}
+  .dv-section{margin-bottom:52px;}
+  .dv-section-label{font-size:.62rem;font-family:'Pretendard',sans-serif;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin-bottom:14px;}
+  .dv-section hr{border:none;border-top:1px solid var(--bd);margin-bottom:24px;}
+  .dv-body-text{font-size:.92rem;color:var(--mut);line-height:1.95;}
+  .dv-role-box{background:var(--sf);border-radius:4px;padding:18px 22px;}
+  .dv-role-text{font-size:.88rem;color:var(--mut);line-height:1.75;font-style:italic;}
+  .dv-info-table{border-top:1px solid var(--bd);padding-top:36px;margin-top:60px;}
+  .dv-info-row{display:flex;gap:28px;padding:13px 0;border-bottom:1px solid var(--bd);}
+  .dv-info-key{width:130px;flex-shrink:0;font-size:.65rem;font-family:'Pretendard',sans-serif;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;padding-top:2px;}
+  .dv-info-val{font-size:.8rem;color:var(--mut);line-height:1.6;flex:1;}
+  .dv-info-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .dv-nav{border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;padding:28px 0 0;margin-top:60px;}
+  .dv-nav-btn{font-size:.72rem;font-family:'Pretendard',sans-serif;color:var(--mut);cursor:pointer;background:none;border:none;display:flex;align-items:center;gap:6px;transition:color .15s;}
+  .dv-nav-btn:hover{color:var(--txt);}
+  .dv-nav-all{font-size:.68rem;font-family:'Pretendard',sans-serif;color:var(--dim);cursor:pointer;border:1px solid var(--bd);padding:6px 14px;border-radius:20px;background:none;transition:all .15s;}
+  .dv-nav-all:hover{border-color:var(--txt);color:var(--txt);}
+
+  footer{border-top:1px solid var(--bd);padding:32px 40px;display:flex;justify-content:space-between;}
+  .footer-copy,.footer-email{font-size:.68rem;color:var(--dim);font-family:'Pretendard',sans-serif;}
+
+  @media(max-width:900px){
+  .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:150;opacity:0;transition:opacity .3s ease;}
+  .mobile-overlay.show{display:block;opacity:1;}
+    :root{--sidebar:0px;}
+    body{flex-direction:column;}
+    .sidebar{position:sticky;top:0;width:100%;height:auto;padding:16px 24px;border-right:none;border-bottom:1px solid var(--bd);flex-direction:row;align-items:center;justify-content:space-between;overflow-y:visible;z-index:200;}
+    .sidebar-logo{font-size:2.2rem;margin-bottom:0;}
+    .sidebar-bio{display:none;}
+    .sidebar-btns{margin-bottom:0;}
+    .sidebar-info-panel,.sidebar-contact-panel{position:absolute;top:100%;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--bd);padding:0 24px;margin-top:0;}
+    .sidebar-info-panel.open,.sidebar-contact-panel.open{max-height:700px;padding:24px;margin-top:0;}
+    #listView,#detailView,footer{margin-left:0;}
+    .main{padding:32px 20px 80px;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="scrollLine"></div>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+  <aside class="sidebar">
+  <div class="sidebar-logo" onclick="showList()">rokay</div>
+  <p class="sidebar-bio">Senior UX/UI Designer with over 15 years of experience crafting intuitive, human-centered experiences for complex digital products.</p>
+  <div class="sidebar-btns">
+    <button class="btn-info" id="btnInfo">INFO</button>
+    <button class="btn-contact" id="btnContact">CONTACT</button>
+  </div>
+  <div class="sidebar-contact-panel" id="contactPanel">
+    <div class="contact-field">
+      <label class="contact-label">Name</label>
+      <input class="contact-input" id="cName" type="text" placeholder="Your name"/>
+    </div>
+    <div class="contact-field">
+      <label class="contact-label">Email</label>
+      <input class="contact-input" id="cEmail" type="email" placeholder="your@email.com"/>
+    </div>
+    <div class="contact-field">
+      <label class="contact-label">Message</label>
+      <textarea class="contact-textarea" id="cMsg" placeholder="Tell me about your project..."></textarea>
+    </div>
+    <button class="contact-send" id="btnSend">Send Message</button>
+  </div>
+  <div class="sidebar-info-panel" id="infoPanel">
+    <div class="avatar-wrap"><div class="sidebar-avatar"><img src="r_profile.png" alt="profile"/><img src="r_profile2.png" class="img-hover" alt="profile hover"/></div><span class="avatar-bubble">hello 👋</span></div>
+    <div class="info-row">
+      <span class="info-label">Name</span>
+      <span class="info-value">Changrok Choi</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Experience</span>
+      <div class="info-exp">
+        <div class="info-exp-item"><span class="info-exp-n">15<span style="font-weight:300">+</span></span><span class="info-exp-l">Years</span></div>
+        <div class="info-exp-item"><span class="info-exp-n">50<span style="font-weight:300">+</span></span><span class="info-exp-l">Projects</span></div>
+      </div>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Skills</span>
+      <div class="info-skill-list">
+        <div class="info-skill-item"><span class="info-skill-n">01</span><span class="info-skill-name">Figma / Design System</span></div>
+        <div class="info-skill-item"><span class="info-skill-n">02</span><span class="info-skill-name">UX Strategy</span></div>
+        <div class="info-skill-item"><span class="info-skill-n">03</span><span class="info-skill-name">Project Management</span></div>
+        <div class="info-skill-item"><span class="info-skill-n">04</span><span class="info-skill-name">Stakeholder Communication</span></div>
+        <div class="info-skill-item"><span class="info-skill-n">05</span><span class="info-skill-name">Team Collaboration</span></div>
+        <div class="info-skill-item"><span class="info-skill-n">06</span><span class="info-skill-name">HTML / CSS Prototyping</span></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main id="listView">
+  <div class="main">
+    <h2 class="works-heading">works</h2>
+    <div class="filter-bar">
+      <button class="fb active" onclick="filter(this,'all')">All</button>
+      <button class="fb" onclick="filter(this,'IoT & Smart Appliances Platform')">IoT &amp; Smart Appliances Platform</button>
+      <button class="fb" onclick="filter(this,'Automotive & In-vehicle UX')">Automotive &amp; In-vehicle UX</button>
+      <button class="fb" onclick="filter(this,'Mobile & Wearable Platform')">Mobile &amp; Wearable Platform</button>
+      <button class="fb" onclick="filter(this,'Service & B2C Platform')">Service &amp; B2C Platform</button>
+    </div>
+    <div class="grid" id="grid">
+      <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="0" onclick="navigate(0)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">LG ThinQ: 우리단지 B2C Home App</div>
+    <div class="gi-desc">Home IoT Control Mobile App Design</div>
+  </div>
+</article>
+<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="1" onclick="navigate(1)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Kitchen Appliances Platform UX</div>
+    <div class="gi-desc">LG IoT 주방가전 플랫폼 UX 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="2" onclick="navigate(2)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Living Appliances Platform UX</div>
+    <div class="gi-desc">LG IoT 생활가전 플랫폼 UX 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="3" onclick="navigate(3)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Air Care Appliances Platform UX</div>
+    <div class="gi-desc">LG IoT 에어케어 플랫폼 UX 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="4" onclick="navigate(4)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">LG ThinQ Mobile App</div>
+    <div class="gi-desc">IoT 모바일 앱 플랫폼 UX 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="5" onclick="navigate(5)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">LG IDB: Interactive Digital Board</div>
+    <div class="gi-desc">인터랙티브 디지털 보드 플랫폼 UX 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="Automotive & In-vehicle UX" data-id="6" onclick="navigate(6)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#e8ecee 0%,#d4dadd 100%)">
+    <span class="gi-thumb-label">AUTOMOTIVE & IN-VEHICLE UX</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Connected Car Infotainment UI</div>
+    <div class="gi-desc">후석 인포테인먼트 시스템 디자인</div>
+  </div>
+</article>
+<article class="gi" data-cat="Mobile & Wearable Platform" data-id="7" onclick="navigate(7)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
+    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">LG Android Mobile Platform UX</div>
+    <div class="gi-desc">Android 스마트폰·태블릿 UI 플랫폼 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="Mobile & Wearable Platform" data-id="8" onclick="navigate(8)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
+    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Wearable UX: LG Watch W7</div>
+    <div class="gi-desc">wearOS 스마트 워치 UI 플랫폼 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="Mobile & Wearable Platform" data-id="9" onclick="navigate(9)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
+    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Wearable UX: LG Watch Urbane LTE</div>
+    <div class="gi-desc">webOS 스마트 워치 UI 플랫폼 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="Service & B2C Platform" data-id="10" onclick="navigate(10)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
+    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Post-purchase B2C UX Solution</div>
+    <div class="gi-desc">B2C '구매 후 경험' UX 개선 솔루션</div>
+  </div>
+</article>
+<article class="gi" data-cat="Service & B2C Platform" data-id="11" onclick="navigate(11)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
+    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Laundry Delivery Driver's Platform</div>
+    <div class="gi-desc">세탁물 배송 기사 전용 플랫폼 구축</div>
+  </div>
+</article>
+<article class="gi" data-cat="Service & B2C Platform" data-id="12" onclick="navigate(12)">
+  <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
+    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span>
+  </div>
+  <div class="gi-body">
+    <div class="gi-title">Poly Mate: Live Fitness Platform UX</div>
+    <div class="gi-desc">인터랙티브 헬스케어 플랫폼 구축</div>
+  </div>
+</article>
+    </div>
+  </div>
+  <footer>
+    <span class="footer-copy">© 2025 rokay</span>
+    <span class="footer-email">zzoddo329@gmail.com</span>
+  </footer>
+</main>
+
+<div id="detailView">
+  <div class="dv-hero" id="dvHero"></div>
+  <div class="dv-wrap">
+    <div class="dv-bread" onclick="showList()">← All Works</div>
+    <div class="dv-client" id="dvClient"></div>
+    <h1 class="dv-title" id="dvTitle"></h1>
+    <div class="dv-subtitle" id="dvSubtitle"></div>
+    <div class="dv-meta-row" id="dvMeta"></div>
+    <div class="dv-section">
+      <div class="dv-section-label">Overview</div>
+      <hr/>
+      <p class="dv-body-text" id="dvOverview"></p>
+    </div>
+    <div class="dv-section">
+      <div class="dv-section-label">My Role</div>
+      <hr/>
+      <div class="dv-role-box"><p class="dv-role-text" id="dvRole"></p></div>
+    </div>
+    <div class="dv-info-table">
+      <div class="dv-info-row"><div class="dv-info-key">Year</div><div class="dv-info-val" id="dvYear"></div></div>
+      <div class="dv-info-row"><div class="dv-info-key">Duration</div><div class="dv-info-val" id="dvDuration"></div></div>
+      <div class="dv-info-row"><div class="dv-info-key">Platform</div><div class="dv-info-val" id="dvPlatform"></div></div>
+      <div class="dv-info-row"><div class="dv-info-key">Tags</div><div class="dv-info-val dv-info-tags" id="dvTags"></div></div>
+    </div>
+    <div class="dv-nav">
+      <button class="dv-nav-btn" id="dvPrev">← Prev</button>
+      <button class="dv-nav-all" onclick="showList()">All Works</button>
+      <button class="dv-nav-btn" id="dvNext">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PROJECTS = [{"id": 0, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ: 우리단지 B2C Home App", "subtitle": "Home IoT Control Mobile App Design", "client": "LG Electronics", "year": "2023 – 현재", "desc": "아파트 단지 주민을 위한 종합 생활 서비스 앱. 에너지 사용량(전기·수도·가스·난방·온수)을 실시간으로 모니터링하고, 커뮤니티 예약·방문차량 관리·컨시어지·주민투표·셔틀버스 등 단지 생활 전반을 하나의 앱에서 처리할 수 있도록 설계했습니다.", "tags": ["UX·UI", "GUI", "Mobile", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true}, {"id": 1, "cat": "IoT & Smart Appliances Platform", "title": "Kitchen Appliances Platform UX", "subtitle": "LG IoT 주방가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2021 – 현재", "desc": "냉장고·오븐·쿠킹 기기 등 LG 주방가전 전 라인업을 아우르는 IoT 플랫폼 UX. 터치 LCD 인터페이스와 리모트 UX를 동시에 고려한 멀티스크린 설계가 핵심이며, 조리 상태·식재료 관리·레시피 연동까지 통합된 경험 흐름을 구축했습니다.", "tags": ["UX·UI", "GUI", "Touch LCD", "Multi-screen", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true}, {"id": 2, "cat": "IoT & Smart Appliances Platform", "title": "Living Appliances Platform UX", "subtitle": "LG IoT 생활가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "세탁기·건조기·청소기 등 생활가전 IoT 플랫폼 UX. 제품 내장 LCD 화면과 스마트폰 리모트 앱 간의 일관된 경험을 유지하면서, 각 디바이스 화면 해상도와 입력 방식의 차이를 극복하는 설계 시스템을 구축했습니다.", "tags": ["UX·UI", "GUI", "Touch LCD", "Remote UX", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true}, {"id": 3, "cat": "IoT & Smart Appliances Platform", "title": "Air Care Appliances Platform UX", "subtitle": "LG IoT 에어케어 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "에어컨·공기청정기·제습기 등 에어케어 가전 IoT 플랫폼. 공기질·온도·습도 등 환경 센서 데이터를 시각화하고, 자동화 루틴 설정과 에너지 효율 모드를 연결하는 UX 플로우를 설계했습니다.", "tags": ["UX·UI", "GUI", "Touch LCD", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true}, {"id": 4, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ Mobile App", "subtitle": "IoT 모바일 앱 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2021", "desc": "LG 전 가전 제품을 하나의 앱으로 컨트롤하는 ThinQ 플랫폼 UX. 수십 가지 제품 카테고리와 수백 가지 기능을 단일 앱 아키텍처 안에서 일관성 있게 구성하는 것이 핵심 과제였습니다.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true}, {"id": 5, "cat": "IoT & Smart Appliances Platform", "title": "LG IDB: Interactive Digital Board", "subtitle": "인터랙티브 디지털 보드 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2019", "desc": "기업·교육 환경을 위한 대형 터치 인터랙티브 디스플레이와 모바일 앱 간의 연동 UX. Flat UI 기반의 명료한 인터페이스로 다인 협업 환경에서의 직관적인 조작성을 확보했습니다.", "tags": ["UX·UI", "GUI", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true}, {"id": 6, "cat": "Automotive & In-vehicle UX", "title": "Connected Car Infotainment UI", "subtitle": "후석 인포테인먼트 시스템 디자인", "client": "Hyundai Motors Group", "year": "2020 – 현재", "desc": "현대자동차그룹 멀티 브랜드 대응 후석(뒷좌석) 인포테인먼트 시스템 UI 설계. 라이트/다크 듀얼 테마를 지원하며, 브랜드별 아이덴티티를 유지하면서도 공통 UX 컴포넌트 시스템 위에서 운영되는 설계 구조를 구축했습니다.", "tags": ["GUI", "Touch LCD", "Multi-screen", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(200,15%,88%)", "thumb_c2": "hsl(200,12%,78%)", "has_svg": true}, {"id": 7, "cat": "Mobile & Wearable Platform", "title": "LG Android Mobile Platform UX", "subtitle": "Android 스마트폰·태블릿 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2021", "desc": "LG 스마트폰·태블릿 전 라인업의 Android 기반 UI 플랫폼 구축. 8년에 걸친 장기 프로젝트로, Google Material Design 가이드라인을 기반으로 LG만의 차별화된 UX 레이어를 설계하고 지속적으로 발전시켰습니다.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true}, {"id": 8, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch W7", "subtitle": "wearOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2017 – 2018", "desc": "Google wearOS 기반 LG Watch W7 UX 플랫폼 설계. 극도로 제한된 화면 공간과 손목 제스처 중심의 입력 방식에 최적화된 정보 설계 및 인터랙션 패턴을 정의했습니다.", "tags": ["UX·UI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true}, {"id": 9, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch Urbane LTE", "subtitle": "webOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2015", "desc": "LG 자체 webOS 기반 스마트워치 플랫폼 UX. 독자 OS 위에서 워치 특화 카드 UI와 독립형 앱 구조를 설계, LG 웨어러블 생태계의 초기 UX 기반을 구축했습니다.", "tags": ["GUI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true}, {"id": 10, "cat": "Service & B2C Platform", "title": "Post-purchase B2C UX Solution", "subtitle": "B2C '구매 후 경험' UX 개선 솔루션", "client": "LG Electronics", "year": "2024", "desc": "제품 구매 이후 설치·등록·첫 사용·A/S까지의 전체 여정을 재설계한 UX 솔루션. 구매 후 이탈률을 줄이고 제품 활용도를 높이는 온보딩 경험을 중심으로 설계했습니다.", "tags": ["UX·UI", "GUI", "Prototype", "Mobile"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true}, {"id": 11, "cat": "Service & B2C Platform", "title": "Laundry Delivery Driver's Platform", "subtitle": "세탁물 배송 기사 전용 플랫폼 구축", "client": "LG Electronics", "year": "2023", "desc": "세탁 배송 서비스의 기사용 모바일 앱과 관제센터 디스플레이를 아우르는 B2B 운영 플랫폼. 수거→세탁→스타일링→건조→배송의 전 과정을 실시간 추적하며, 기사·크루·관리자 각 역할별 최적화된 UI를 설계했습니다.", "tags": ["UX·UI", "GUI", "Mobile", "Control Room"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true}, {"id": 12, "cat": "Service & B2C Platform", "title": "Poly Mate: Live Fitness Platform UX", "subtitle": "인터랙티브 헬스케어 플랫폼 구축", "client": "LG Electronics", "year": "2022", "desc": "", "tags": ["UX·UI", "GUI", "Mobile", "Web"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true}];
+
+function toggleInfo() {
+  var panel = document.getElementById('infoPanel');
+  var btn = document.getElementById('btnInfo');
+  var cp = document.getElementById('contactPanel');
+  var bc = document.getElementById('btnContact');
+  var ov = document.getElementById('mobileOverlay');
+  var isOpen = panel.classList.contains('open');
+  cp.classList.remove('open'); bc.classList.remove('active');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('active', !isOpen);
+  if(window.innerWidth<=900){ ov.classList.toggle('show', !isOpen); }
+}
+function toggleContact() {
+  var panel = document.getElementById('contactPanel');
+  var btn = document.getElementById('btnContact');
+  var ip = document.getElementById('infoPanel');
+  var bi = document.getElementById('btnInfo');
+  var ov = document.getElementById('mobileOverlay');
+  var isOpen = panel.classList.contains('open');
+  ip.classList.remove('open'); bi.classList.remove('active');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('active', !isOpen);
+  if(window.innerWidth<=900){ ov.classList.toggle('show', !isOpen); }
+}
+function sendContact() {
+  var name = document.getElementById('cName').value.trim();
+  var email = document.getElementById('cEmail').value.trim();
+  var msg = document.getElementById('cMsg').value.trim();
+  if (!name || !email || !msg) { alert('Please fill in all fields.'); return; }
+  window.location.href = 'mailto:zzoddo329@gmail.com?subject=Portfolio Inquiry from ' + encodeURIComponent(name) + '&body=' + encodeURIComponent(msg + '\n\nFrom: ' + email);
+}
+
+function showList() {
+  document.getElementById('listView').style.display = '';
+  document.getElementById('detailView').style.display = 'none';
+  history.pushState({view:'list'}, '', '#works');
+  window.scrollTo(0,0);
+}
+
+function filter(btn, cat) {
+  document.querySelectorAll('.fb').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.gi').forEach(function(el){
+    el.classList.toggle('hidden', cat !== 'all' && el.dataset.cat !== cat);
+  });
+}
+
+function navigate(id) {
+  var p = PROJECTS[id];
+  if (!p) return;
+  document.getElementById('dvHero').innerHTML = '';
+  document.getElementById('dvHero').style.background = 'var(--sf)';
+  document.getElementById('dvClient').textContent = p.client || '';
+  document.getElementById('dvTitle').textContent = p.title || '';
+  document.getElementById('dvSubtitle').textContent = p.subtitle || '';
+  var metaRow = document.getElementById('dvMeta');
+  metaRow.innerHTML = '';
+  (p.tags||[]).forEach(function(t){ var s=document.createElement('span'); s.className='dv-tag'; s.textContent=t; metaRow.appendChild(s); });
+  if(p.ongoing){ var s=document.createElement('span'); s.className='dv-ongoing'; s.textContent='Ongoing'; metaRow.appendChild(s); }
+  document.getElementById('dvOverview').textContent = p.overview || '';
+  document.getElementById('dvRole').textContent = p.role || '';
+  document.getElementById('dvYear').textContent = p.year || '';
+  document.getElementById('dvDuration').textContent = p.duration || '';
+  document.getElementById('dvPlatform').textContent = p.platform || '';
+  var tagsEl = document.getElementById('dvTags');
+  tagsEl.innerHTML = '';
+  (p.tags||[]).forEach(function(t){ var s=document.createElement('span'); s.className='dv-tag'; s.textContent=t; tagsEl.appendChild(s); });
+  var prevP = PROJECTS[id-1];
+  var nextP = PROJECTS[id+1];
+  document.getElementById('dvPrev').style.visibility = prevP ? 'visible' : 'hidden';
+  document.getElementById('dvNext').style.visibility = nextP ? 'visible' : 'hidden';
+  if(prevP) document.getElementById('dvPrev').onclick = function(){ navigate(id-1); };
+  if(nextP) document.getElementById('dvNext').onclick = function(){ navigate(id+1); };
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').style.display = 'block';
+  history.pushState({view:'detail', id:id}, '', '#project-'+id);
+  window.scrollTo(0,0);
+}
+
+window.addEventListener('popstate', function(e){
+  if(e.state && e.state.view === 'detail') navigate(e.state.id);
+  else showList();
+});
+
+window.addEventListener('scroll', function(){
+  var el = document.getElementById('scrollLine');
+  if(!el) return;
+  var s = document.documentElement.scrollTop;
+  var h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  el.style.width = (h > 0 ? s/h*100 : 0) + '%';
+});
+
+
+  // Avatar bubble - fixed position to avoid sidebar overflow clipping
+  (function(){
+    var wrap = document.querySelector('.avatar-wrap');
+    var bubble = document.querySelector('.avatar-bubble');
+    if(!wrap || !bubble) return;
+    wrap.addEventListener('mouseenter', function(){
+      var r = wrap.getBoundingClientRect();
+      bubble.style.left = (r.right - 14) + 'px';
+      bubble.style.top = (r.top - 4) + 'px';
+      bubble.style.opacity = '1';
+      bubble.style.transform = 'scale(1) translate(0,0)';
+    });
+    wrap.addEventListener('mouseleave', function(){
+      bubble.style.opacity = '0';
+      bubble.style.transform = 'scale(.85) translate(4px,-4px)';
+    });
+  })();
+
+  
+  var ov = document.getElementById('mobileOverlay');
+  if(ov){ ov.addEventListener('click', function(){
+    document.getElementById('infoPanel').classList.remove('open');
+    document.getElementById('contactPanel').classList.remove('open');
+    document.getElementById('btnInfo').classList.remove('active');
+    document.getElementById('btnContact').classList.remove('active');
+    ov.classList.remove('show');
+  }); }
+
+  document.getElementById('btnInfo').addEventListener('click', toggleInfo);
+document.getElementById('btnContact').addEventListener('click', toggleContact);
+document.getElementById('btnSend').addEventListener('click', sendContact);
+
+
+  // Avatar bubble - fixed position to avoid sidebar overflow clipping
+  (function(){
+    var wrap = document.querySelector('.avatar-wrap');
+    var bubble = document.querySelector('.avatar-bubble');
+    if(!wrap || !bubble) return;
+    wrap.addEventListener('mouseenter', function(){
+      var r = wrap.getBoundingClientRect();
+      bubble.style.left = (r.right - 14) + 'px';
+      bubble.style.top = (r.top - 4) + 'px';
+      bubble.style.opacity = '1';
+      bubble.style.transform = 'scale(1) translate(0,0)';
+    });
+    wrap.addEventListener('mouseleave', function(){
+      bubble.style.opacity = '0';
+      bubble.style.transform = 'scale(.85) translate(4px,-4px)';
+    });
+  })();
+
+  document.getElementById('btnInfo').addEventListener('click', toggleInfo);
+document.getElementById('btnContact').addEventListener('click', toggleContact);
+document.getElementById('btnSend').addEventListener('click', sendContact);
+</script>
+</body>
+</html>
