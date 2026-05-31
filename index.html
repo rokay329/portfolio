@@ -473,7 +473,12 @@ window.addEventListener('scroll', function(){
     var bubble = document.querySelector('.avatar-bubble');
     if(!wrap || !bubble) return;
     var avatarImg = document.getElementById('avatarImg');
-    if(avatarImg){ wrap.addEventListener('mouseenter', function(){ avatarImg.src='r_profile2.svg'; }); wrap.addEventListener('mouseleave', function(){ avatarImg.src='r_profile.svg'; }); wrap.addEventListener('click', function(){ if(window.innerWidth<=900){ var isImg2 = avatarImg.src.includes('r_profile2'); avatarImg.src = isImg2 ? 'r_profile.svg' : 'r_profile2.svg'; bubble.style.opacity = isImg2 ? '0' : '1'; bubble.style.transform = isImg2 ? 'scale(.85) translate(4px,-4px)' : 'scale(1) translate(0,0)'; } }); }
+    if(avatarImg){
+      var toggled = false;
+      wrap.addEventListener('mouseenter', function(){ if(window.innerWidth>900){ avatarImg.src='r_profile2.svg'; } });
+      wrap.addEventListener('mouseleave', function(){ if(window.innerWidth>900){ avatarImg.src='r_profile.svg'; } });
+      wrap.addEventListener('click', function(){ if(window.innerWidth<=900){ toggled = !toggled; avatarImg.src = toggled ? 'r_profile2.svg' : 'r_profile.svg'; bubble.style.opacity = toggled ? '1' : '0'; bubble.style.transform = toggled ? 'scale(1) translate(0,0)' : 'scale(.85) translate(4px,-4px)'; } });
+    }
     wrap.addEventListener('mouseenter', function(){
       var r = wrap.getBoundingClientRect();
       bubble.style.left = (r.right - 14) + 'px';
