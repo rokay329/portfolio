@@ -384,7 +384,7 @@ function toggleInfo() {
   cp.classList.remove('open'); bc.classList.remove('active');
   panel.classList.toggle('open', !isOpen);
   btn.classList.toggle('active', !isOpen);
-  if(window.innerWidth<=900){ ov.classList.toggle('show', !isOpen); }
+  if(window.innerWidth<=900){ ov.classList.toggle('show', !isOpen); document.body.style.overflow = !isOpen ? 'hidden' : ''; }
 }
 function toggleContact() {
   var panel = document.getElementById('contactPanel');
@@ -396,7 +396,7 @@ function toggleContact() {
   ip.classList.remove('open'); bi.classList.remove('active');
   panel.classList.toggle('open', !isOpen);
   btn.classList.toggle('active', !isOpen);
-  if(window.innerWidth<=900){ ov.classList.toggle('show', !isOpen); }
+  if(window.innerWidth<=900){ ov.classList.toggle('show', !isOpen); document.body.style.overflow = !isOpen ? 'hidden' : ''; }
 }
 function sendContact() {
   var name = document.getElementById('cName').value.trim();
@@ -472,7 +472,7 @@ window.addEventListener('scroll', function(){
     var wrap = document.querySelector('.avatar-wrap');
     var bubble = document.querySelector('.avatar-bubble');
     if(!wrap || !bubble) return;
-    var avatarImg = document.getElementById('avatarImg');
+    var avatarImg = document.getElementById('avatarImg'); var _pre=new Image(); _pre.src='r_profile2.svg';
     if(avatarImg){
       var toggled = false;
       wrap.addEventListener('mouseenter', function(){ if(window.innerWidth>900){ avatarImg.src='r_profile2.svg'; } });
@@ -499,7 +499,7 @@ window.addEventListener('scroll', function(){
     document.getElementById('contactPanel').classList.remove('open');
     document.getElementById('btnInfo').classList.remove('active');
     document.getElementById('btnContact').classList.remove('active');
-    ov.classList.remove('show');
+    ov.classList.remove('show'); document.body.style.overflow = '';
   }); }
 
   document.getElementById('btnInfo').addEventListener('click', toggleInfo);
