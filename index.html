@@ -51,7 +51,7 @@
   .sidebar-avatar img{width:80px;height:80px;object-fit:contain;display:block;}
   .avatar-wrap{position:relative;display:inline-block;margin-bottom:20px;}
   .avatar-wrap .sidebar-avatar{margin-bottom:0;}
-  .avatar-bubble{position:fixed;background:var(--txt);color:var(--bg);font-size:.75rem;font-weight:600;padding:6px 14px;border-radius:20px;white-space:nowrap;opacity:0;transform:scale(.85) translate(4px,-4px);transform-origin:bottom left;transition:opacity .2s ease,transform .2s ease;pointer-events:none;z-index:9999;}
+  .avatar-bubble{position:fixed;background:var(--txt);color:var(--bg);font-size:.75rem;font-weight:600;padding:0 12px;height:28px;line-height:28px;box-sizing:content-box;border-radius:20px;white-space:nowrap;opacity:0;transform:scale(.85) translate(4px,-4px);transform-origin:bottom left;transition:opacity .2s ease,transform .2s ease,width .4s cubic-bezier(.4,0,.2,1),color .15s ease;pointer-events:none;z-index:9999;}
   .avatar-bubble::after{content:'';position:absolute;bottom:-6px;left:10px;width:0;height:0;border-top:7px solid var(--txt);border-right:7px solid transparent;border-left:0;border-bottom:0;}
   .info-row{display:flex;flex-direction:column;gap:6px;margin-bottom:28px;}
   .info-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);}
@@ -69,9 +69,9 @@
   .sidebar-contact-panel.open{max-height:600px;opacity:1;margin-top:40px;}
   .contact-field{display:flex;flex-direction:column;gap:6px;margin-bottom:24px;}
   .contact-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);}
-  .contact-input,.contact-textarea{background:transparent;border:none;border-bottom:1px solid var(--bd);border-radius:0;padding:8px 0;font-size:.78rem;color:var(--txt);font-family:'Pretendard',sans-serif;outline:none;transition:border-color .15s;resize:none;width:100%;}
-  .contact-input:focus,.contact-textarea:focus{border-bottom-color:var(--txt);}
-  .contact-textarea{height:90px;line-height:1.6;}
+  .contact-input,.contact-textarea{background:transparent;border:none;border-bottom:2px solid var(--txt);border-radius:0;padding:10px 0;font-size:.9rem;color:var(--txt);font-family:'Pretendard',sans-serif;outline:none;transition:border-color .2s;resize:none;width:100%;}
+  .contact-input:focus,.contact-textarea:focus{border-bottom-color:#e56049;}
+  .contact-textarea{height:110px;line-height:1.6;}
   .contact-send{width:100%;padding:10px;border-radius:40px;background:var(--txt);color:#fff;font-size:.72rem;font-weight:600;letter-spacing:.04em;font-family:'Pretendard',sans-serif;border:none;cursor:pointer;transition:opacity .15s;margin-top:4px;}
   .contact-send:hover{opacity:.8;}
   .btn-contact.active{background:var(--red);border-color:var(--red);}
@@ -180,7 +180,7 @@
   <div class="sidebar-info-panel" id="infoPanel">
     <div class="avatar-wrap"><div class="sidebar-avatar"><svg id="avatarSvg" width="80" height="80" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
 <path id="avatarPath" d="M64 10C86.0518 10 104.823 24.9223 111.857 45.7812C120.843 46.2243 128 54.1051 128 63.7617C128 73.3606 120.928 81.2037 112.019 81.7324C105.113 102.845 86.2227 118 64 118C41.7772 118 22.8859 102.845 15.9805 81.7324C7.07112 81.2032 0 73.3603 0 63.7617C0.000120624 54.1055 7.15656 46.2248 16.1416 45.7812C23.1764 24.9221 41.9481 10 64 10ZM101.503 50.3936C76.7145 48.5782 51.8284 48.5416 27.0361 50.2861L22.9004 55.5576C22.7887 55.7001 22.716 55.8694 22.6895 56.0479L21.4473 64.4102C21.2857 65.4979 19.7774 65.6185 19.5059 64.5654L16.7207 53.7578C16.6593 53.7623 16.5979 53.7684 16.5361 53.7715C12.2085 53.9851 8.00012 57.9607 8 63.7617C8 69.3445 11.9028 73.2419 16.0527 73.7119L16.4551 73.7461L16.7607 73.7705C19.9098 74.0784 22.5943 76.2196 23.584 79.2451C28.8715 95.4114 42.162 107.143 57.9805 109.545C59.9637 108.602 61.726 107.206 63.1562 105.474C63.6035 104.932 64.4638 104.932 64.9111 105.474C66.3371 107.201 68.0933 108.594 70.0693 109.537C85.8655 107.119 99.133 95.3945 104.415 79.2451L104.516 78.9551C105.613 75.9875 108.367 73.9347 111.545 73.7461C115.841 73.491 120 69.5246 120 63.7617C120 58.0782 115.96 54.1489 111.727 53.791L108.951 64.5654C108.68 65.6186 107.171 65.4979 107.01 64.4102L105.768 56.0479C105.741 55.8692 105.668 55.7002 105.556 55.5576L101.503 50.3936ZM64 87C65.7934 87 67.3523 87.8529 68.1465 89.1074C68.7373 90.0407 67.8105 90.9999 66.7061 91H61.2939C60.1894 90.9999 59.2627 90.0407 59.8535 89.1074C60.6477 87.8529 62.2066 87 64 87ZM45.1768 65C47.5157 65.0002 49.4121 67.6864 49.4121 71C49.4121 74.3136 47.5157 76.9998 45.1768 77C42.8377 77 40.9414 74.3137 40.9414 71C40.9414 67.6863 42.8377 65 45.1768 65ZM80.9414 65C83.2804 65.0002 85.1768 67.6864 85.1768 71C85.1768 74.3136 83.2804 76.9998 80.9414 77C78.6023 77 76.7061 74.3137 76.7061 71C76.7061 67.6863 78.6023 65 80.9414 65ZM13.0449 61.7168C13.8664 60.9784 14.8672 61.9032 14.8672 63.0078V65.0078C14.8672 66.1124 13.8664 67.0372 13.0449 66.2988C12.4327 65.7485 12.0439 64.9266 12.0439 64.0078C12.0439 63.0891 12.4327 62.2671 13.0449 61.7168ZM113.485 63.0078C113.485 61.9032 114.487 60.9784 115.309 61.7168C115.921 62.2671 116.31 63.0892 116.31 64.0078C116.31 64.9264 115.921 65.7485 115.309 66.2988C114.487 67.0372 113.485 66.1124 113.485 65.0078V63.0078ZM45.1768 59C46.4078 59.0001 47.5007 59.4711 48.1875 60.1992C48.9454 61.0027 48.0459 61.9999 46.9414 62H43.4121C42.3076 62 41.4073 61.0027 42.165 60.1992C42.8519 59.471 43.9455 59 45.1768 59ZM80.9414 59C82.1725 59.0001 83.2653 59.4711 83.9521 60.1992C84.71 61.0027 83.8105 61.9999 82.7061 62H79.1768C78.0722 62 77.1719 61.0027 77.9297 60.1992C78.6166 59.471 79.7102 59 80.9414 59ZM99.209 37.8096C75.7859 35.3885 52.1743 35.4059 28.7539 37.8623C27.4285 39.9209 26.2531 42.1057 25.2461 44.4004C51.0576 42.5165 76.9733 42.54 102.782 44.4717C101.76 42.1312 100.562 39.9049 99.209 37.8096ZM64 18C52.353 18 41.6422 23.0359 33.8398 31.3428C53.8927 29.5752 74.0614 29.5612 94.1162 31.2988C86.3177 23.0187 75.6259 18 64 18Z" fill="#E56049"/>
-</svg></div><span class="avatar-bubble">hello 👋</span></div>
+</svg></div><span class="avatar-bubble" id="helloBubble">hello 👋</span></div>
     <div class="info-row">
       <span class="info-label">Name</span>
       <span class="info-value">Changrok Choi</span>
@@ -494,8 +494,8 @@ window.addEventListener('scroll', function(){
       wrap.addEventListener('mouseenter', function(){ if(window.innerWidth>900){ morphTo(path2); } });
       wrap.addEventListener('mouseleave', function(){ if(window.innerWidth>900){ morphTo(path1); } });
       wrap.addEventListener('click', function(){ if(window.innerWidth<=900){
-        if(avatarState===1){ morphTo(path2); avatarState=2; var r=wrap.getBoundingClientRect(); bubble.style.left=(r.right-14)+'px'; bubble.style.top=(r.top-4)+'px'; bubble.style.opacity='1'; bubble.style.transform='scale(1) translate(0,0)'; }
-        else{ morphTo(path1); avatarState=1; bubble.style.opacity='0'; bubble.style.transform='scale(.85) translate(4px,-4px)'; }
+        if(avatarState===1){ morphTo(path2); avatarState=2; var r=wrap.getBoundingClientRect(); bubble.style.left=(r.right-14)+'px'; bubble.style.top=(r.top-4)+'px'; bubble.style.opacity='1'; bubble.style.transform='scale(1) translate(0,0)'; startHelloRotation(); }
+        else{ morphTo(path1); avatarState=1; bubble.style.opacity='0'; bubble.style.transform='scale(.85) translate(4px,-4px)'; stopHelloRotation(); }
       }});
     }
     wrap.addEventListener('mouseenter', function(){
@@ -505,12 +505,14 @@ window.addEventListener('scroll', function(){
         bubble.style.top = (r.top - 4) + 'px';
         bubble.style.opacity = '1';
         bubble.style.transform = 'scale(1) translate(0,0)';
+        startHelloRotation();
       }
     });
     wrap.addEventListener('mouseleave', function(){
       if(window.innerWidth>900){
         bubble.style.opacity = '0';
         bubble.style.transform = 'scale(.85) translate(4px,-4px)';
+        stopHelloRotation();
       }
     });
   })();
@@ -529,6 +531,40 @@ window.addEventListener('scroll', function(){
 document.getElementById('btnContact').addEventListener('click', toggleContact);
 document.getElementById('btnSend').addEventListener('click', sendContact);
 
+
+  // Hello bubble rotation
+  var helloWords = ['hello 👋','안녕하세요 👋','こんにちは 👋','Hallo 👋','Bonjour 👋','Ciao 👋','Hola 👋','你好 👋','Olá 👋','مرحبا 👋'];
+  var helloIdx = 0;
+  var helloTimer = null;
+  var helloBubble = document.getElementById('helloBubble');
+  var helloMeasurer = document.createElement('span');
+  helloMeasurer.style.cssText = 'position:fixed;visibility:hidden;font-size:.75rem;font-weight:600;font-family:Pretendard,sans-serif;white-space:nowrap;pointer-events:none;';
+  document.body.appendChild(helloMeasurer);
+  function measureText(txt){ helloMeasurer.textContent=txt; return helloMeasurer.offsetWidth; }
+  function startHelloRotation(){
+    if(helloTimer) return;
+    if(helloBubble){ helloBubble.style.width = measureText(helloWords[helloIdx]) + 'px'; }
+    helloTimer = setInterval(function(){
+      helloIdx = (helloIdx + 1) % helloWords.length;
+      if(helloBubble){
+        helloBubble.style.color = 'transparent';
+        setTimeout(function(){
+          var newW = measureText(helloWords[helloIdx]);
+          helloBubble.textContent = helloWords[helloIdx];
+          helloBubble.style.width = newW + 'px';
+          helloBubble.style.color = '';
+        }, 150);
+      }
+    }, 1500);
+  }
+  function stopHelloRotation(){
+    clearInterval(helloTimer); helloTimer=null;
+    helloIdx=0;
+    if(helloBubble){
+      helloBubble.textContent = helloWords[0];
+      helloBubble.style.width = measureText(helloWords[0]) + 'px';
+    }
+  }
 </script>
 </body>
 </html>
