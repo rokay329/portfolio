@@ -547,13 +547,15 @@ document.getElementById('btnSend').addEventListener('click', sendContact);
     helloTimer = setInterval(function(){
       helloIdx = (helloIdx + 1) % helloWords.length;
       if(helloBubble){
-        helloBubble.style.color = 'transparent';
+        var newW = measureText(helloWords[helloIdx]);
+        helloBubble.style.width = newW + 'px';
         setTimeout(function(){
-          var newW = measureText(helloWords[helloIdx]);
-          helloBubble.textContent = helloWords[helloIdx];
-          helloBubble.style.width = newW + 'px';
-          helloBubble.style.color = '';
-        }, 150);
+          helloBubble.style.color = 'transparent';
+          setTimeout(function(){
+            helloBubble.textContent = helloWords[helloIdx];
+            helloBubble.style.color = '';
+          }, 120);
+        }, 200);
       }
     }, 1500);
   }
