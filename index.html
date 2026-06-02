@@ -83,19 +83,20 @@
 
   .works-heading{font-size:1.35rem;font-weight:700;letter-spacing:-.03em;margin-bottom:32px;}
 
-  .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
-  .fb{font-size:.72rem;font-weight:600;letter-spacing:.04em;font-family:'Pretendard',sans-serif;border:2px solid var(--bd);background:transparent;color:var(--mut);padding:9px 20px;border-radius:40px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-  .fb:hover{border-color:var(--txt);color:var(--txt);}
-  .fb.active{background:var(--txt);color:#fff;border-color:var(--txt);}
+  .cat-section{margin-bottom:56px;}
+  .cat-heading{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--txt);padding-bottom:16px;border-bottom:2px solid var(--txt);margin-bottom:28px;}
 
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
   .gi{cursor:pointer;overflow:hidden;}
-  .gi.hidden{display:none;}
-  .gi:hover .gi-title{text-decoration:underline;text-underline-offset:3px;}
   .gi-thumb{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
-  .gi-thumb-label{font-size:.58rem;font-family:'Pretendard',sans-serif;color:rgba(0,0,0,.3);letter-spacing:.1em;}
+  .gi-thumb-label{font-size:.58rem;font-family:'Pretendard',sans-serif;color:rgba(0,0,0,.3);letter-spacing:.1em;transition:opacity .3s;}
+  .gi-thumb-overlay{position:absolute;inset:0;background:var(--txt);opacity:0;transition:opacity .35s ease;display:flex;align-items:center;justify-content:center;}
+  .gi-thumb-overlay-text{font-size:.68rem;font-weight:600;color:#fff;letter-spacing:.06em;text-transform:uppercase;transform:translateY(8px);opacity:0;transition:opacity .3s ease,transform .3s ease;}
+  .gi:hover .gi-thumb-overlay{opacity:.88;}
+  .gi:hover .gi-thumb-overlay-text{opacity:1;transform:translateY(0);}
+  .gi:hover .gi-thumb-label{opacity:0;}
   .gi-thumb img,.gi-thumb svg{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
-  .gi:hover .gi-thumb img,.gi:hover .gi-thumb svg{transform:scale(1.03);}
+  .gi:hover .gi-thumb img,.gi:hover .gi-thumb svg{transform:scale(1.04);}
   .gi-body{padding:14px 0 8px;}
   .gi-title{font-size:.95rem;font-weight:600;letter-spacing:-.02em;margin-bottom:5px;line-height:1.3;}
   .gi-desc{font-size:.75rem;color:var(--dim);line-height:1.7;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
@@ -103,7 +104,7 @@
   /* DETAIL VIEW */
   .dv-hero{width:100%;aspect-ratio:16/6;overflow:hidden;background:var(--sf);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--bd);}
   .dv-hero svg{width:100%;height:100%;display:block;}
-  .dv-wrap{max-width:760px;padding:56px 48px 120px;}
+  .dv-wrap{max-width:760px;padding:56px 40px 120px;}
   .dv-bread{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:8px;margin-bottom:52px;cursor:pointer;transition:color .15s;}
   .dv-bread:hover{color:var(--txt);}
   .dv-client{font-size:.62rem;color:var(--dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;}
@@ -145,8 +146,47 @@
     .sidebar-info-panel.open,.sidebar-contact-panel.open{max-height:700px;padding:24px;margin-top:0;}
     #listView,#detailView,footer{margin-left:0;}
     .main{padding:32px 20px 80px;}
+  .gi-thumb{aspect-ratio:4/3;}
     .grid{grid-template-columns:1fr;}
   }
+
+  /* Custom cursor */
+  *{cursor:none!important;}
+  #cursor{position:fixed;width:12px;height:12px;border-radius:50%;background:#e56049;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s;}
+  #cursor.big{width:40px;height:40px;opacity:.3;}
+
+  /* Detail sticky header */
+  .dv-sticky{position:fixed;top:0;left:var(--sidebar);right:0;height:48px;background:var(--bg);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 48px;z-index:190;opacity:0;transform:translateY(-100%);transition:opacity .25s,transform .25s;}
+  .dv-sticky.show{opacity:1;transform:translateY(0);}
+  .dv-sticky-back{font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);cursor:none;display:flex;align-items:center;gap:8px;transition:color .15s;}
+  .dv-sticky-back:hover{color:var(--txt);}
+  .dv-sticky-title{font-size:.72rem;font-weight:600;color:var(--txt);margin-left:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  .dv-float-back{display:none;position:fixed;bottom:32px;left:24px;width:48px;height:48px;border-radius:50%;background:var(--txt);color:var(--bg);border:none;font-size:1.1rem;align-items:center;justify-content:center;z-index:200;cursor:none;box-shadow:0 4px 16px rgba(0,0,0,.18);-webkit-tap-highlight-color:transparent;}
+  .dv-float-back.show{display:flex;opacity:0;transform:translateY(8px);animation:floatIn .3s ease forwards;}
+  .dv-float-back:hover img{transform:translateX(-3px);}
+  .dv-float-back:active{transform:scale(.93);}
+  @keyframes floatIn{to{opacity:1;transform:translateY(0);}}
+
+  .dv-gallery{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:52px;}
+  .dv-gallery-item:first-child{grid-column:1/-1;aspect-ratio:16/7;}
+  .dv-gallery-item{width:100%;aspect-ratio:16/9;background:var(--sf);border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .dv-gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+  .dv-gallery-ph{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bd);}
+
+
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  .lightbox.show{opacity:1;pointer-events:all;}
+  .lightbox-img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:4px;transform:scale(.96);transition:transform .25s ease;}
+  .lightbox.show .lightbox-img{transform:scale(1);}
+  .lightbox-close{position:absolute;top:20px;right:24px;font-size:1.4rem;color:#fff;cursor:none;opacity:.7;transition:opacity .15s;line-height:1;}
+  .lightbox-close:hover{opacity:1;}
+
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.2rem;width:44px;height:44px;border-radius:50%;cursor:none;transition:background .15s;display:flex;align-items:center;justify-content:center;}
+  .lb-nav:hover{background:rgba(255,255,255,.25);}
+  .lb-prev{left:24px;}
+  .lb-next{right:24px;}
+  .lb-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:.65rem;letter-spacing:.1em;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
 </head>
@@ -154,6 +194,7 @@
 
 <div id="scrollLine"></div>
 
+<div id="cursor"></div>
 <div class="mobile-overlay" id="mobileOverlay"></div>
   <aside class="sidebar">
   <div class="sidebar-logo" onclick="showList()"><img src="logo.svg" alt="최창록디자인연구소" style="height:28px;display:block;"/></div>
@@ -209,17 +250,13 @@
 <main id="listView">
   <div class="main">
     <h2 class="works-heading">works</h2>
-    <div class="filter-bar">
-      <button class="fb active" onclick="filter(this,'all')">All</button>
-      <button class="fb" onclick="filter(this,'IoT & Smart Appliances Platform')">IoT &amp; Smart Appliances Platform</button>
-      <button class="fb" onclick="filter(this,'Automotive & In-vehicle UX')">Automotive &amp; In-vehicle UX</button>
-      <button class="fb" onclick="filter(this,'Mobile & Wearable Platform')">Mobile &amp; Wearable Platform</button>
-      <button class="fb" onclick="filter(this,'Service & B2C Platform')">Service &amp; B2C Platform</button>
-    </div>
-    <div class="grid" id="grid">
+    <div id="grid">
+    <div class="cat-section">
+      <div class="cat-heading">IoT &amp; Smart Appliances Platform</div>
+      <div class="grid" id="grid-iot">
       <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="0" onclick="navigate(0)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
-    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG ThinQ: 우리단지 B2C Home App</div>
@@ -228,7 +265,7 @@
 </article>
 <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="1" onclick="navigate(1)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
-    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Kitchen Appliances Platform UX</div>
@@ -237,7 +274,7 @@
 </article>
 <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="2" onclick="navigate(2)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
-    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Living Appliances Platform UX</div>
@@ -246,7 +283,7 @@
 </article>
 <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="3" onclick="navigate(3)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
-    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Air Care Appliances Platform UX</div>
@@ -255,7 +292,7 @@
 </article>
 <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="4" onclick="navigate(4)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
-    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG ThinQ Mobile App</div>
@@ -264,25 +301,33 @@
 </article>
 <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="5" onclick="navigate(5)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
-    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span>
+    <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG IDB: Interactive Digital Board</div>
     <div class="gi-desc">인터랙티브 디지털 보드 플랫폼 UX 구축</div>
   </div>
 </article>
+</div></div>
+    <div class="cat-section">
+      <div class="cat-heading">Automotive &amp; In-vehicle UX</div>
+      <div class="grid" id="grid-auto">
 <article class="gi" data-cat="Automotive & In-vehicle UX" data-id="6" onclick="navigate(6)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#e8ecee 0%,#d4dadd 100%)">
-    <span class="gi-thumb-label">AUTOMOTIVE & IN-VEHICLE UX</span>
+    <span class="gi-thumb-label">AUTOMOTIVE & IN-VEHICLE UX</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Connected Car Infotainment UI</div>
     <div class="gi-desc">후석 인포테인먼트 시스템 디자인</div>
   </div>
 </article>
+</div></div>
+    <div class="cat-section">
+      <div class="cat-heading">Mobile &amp; Wearable Platform</div>
+      <div class="grid" id="grid-mobile">
 <article class="gi" data-cat="Mobile & Wearable Platform" data-id="7" onclick="navigate(7)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
-    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span>
+    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG Android Mobile Platform UX</div>
@@ -291,7 +336,7 @@
 </article>
 <article class="gi" data-cat="Mobile & Wearable Platform" data-id="8" onclick="navigate(8)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
-    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span>
+    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Wearable UX: LG Watch W7</div>
@@ -300,16 +345,20 @@
 </article>
 <article class="gi" data-cat="Mobile & Wearable Platform" data-id="9" onclick="navigate(9)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
-    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span>
+    <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Wearable UX: LG Watch Urbane LTE</div>
     <div class="gi-desc">webOS 스마트 워치 UI 플랫폼 구축</div>
   </div>
 </article>
+</div></div>
+    <div class="cat-section">
+      <div class="cat-heading">Service &amp; B2C Platform</div>
+      <div class="grid" id="grid-service">
 <article class="gi" data-cat="Service & B2C Platform" data-id="10" onclick="navigate(10)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
-    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span>
+    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Post-purchase B2C UX Solution</div>
@@ -318,7 +367,7 @@
 </article>
 <article class="gi" data-cat="Service & B2C Platform" data-id="11" onclick="navigate(11)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
-    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span>
+    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Laundry Delivery Driver's Platform</div>
@@ -327,7 +376,7 @@
 </article>
 <article class="gi" data-cat="Service & B2C Platform" data-id="12" onclick="navigate(12)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
-    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span>
+    <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Poly Mate: Live Fitness Platform UX</div>
@@ -343,6 +392,11 @@
 </main>
 
 <div id="detailView">
+  <button class="dv-float-back" id="dvFloatBack" onclick="showList()"><img src="arrow.svg" alt="back" style="width:27px;height:27px;transition:transform .25s ease;"/></button>
+  <div class="dv-sticky" id="dvSticky">
+    <span class="dv-sticky-back" onclick="showList()">← Works</span>
+    <span class="dv-sticky-title" id="dvStickyTitle"></span>
+  </div>
   <div class="dv-hero" id="dvHero"></div>
   <div class="dv-wrap">
     <div class="dv-bread" onclick="showList()">← All Works</div>
@@ -355,6 +409,7 @@
       <hr/>
       <p class="dv-body-text" id="dvOverview"></p>
     </div>
+    <div class="dv-gallery" id="dvGallery"></div>
     <div class="dv-section">
       <div class="dv-section-label">My Role</div>
       <hr/>
@@ -374,6 +429,17 @@
 
 <script>
 const PROJECTS = [{"id": 0, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ: 우리단지 B2C Home App", "subtitle": "Home IoT Control Mobile App Design", "client": "LG Electronics", "year": "2023 – 현재", "desc": "A comprehensive smart living app for apartment residents, designed to bring every aspect of community life into a single, intuitive experience. The app covers real-time energy monitoring across electricity, water, gas, heating, and hot water — alongside community services like facility reservations, visitor vehicle management, concierge requests, resident voting, and shuttle bus tracking. The core challenge was making a feature-dense platform feel effortless: organizing complex data hierarchies without overwhelming the user, and maintaining visual clarity across a wide range of use cases.", "tags": ["UX·UI", "GUI", "Mobile", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 전체 UX 전략 수립, 사용자 리서치, 프로토타이핑 및 개발팀 협업", "duration": "12개월 (진행 중)"}, {"id": 1, "cat": "IoT & Smart Appliances Platform", "title": "Kitchen Appliances Platform UX", "subtitle": "LG IoT 주방가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2021 – 현재", "desc": "A unified IoT UX platform spanning LG's full lineup of kitchen appliances — refrigerators, ovens, and cooking devices. The key design challenge was crafting a coherent experience across two distinct interaction surfaces: embedded touch LCD panels on the devices themselves and remote control via smartphone. The platform integrates cooking status monitoring, ingredient management, and recipe connectivity into a single flow, ensuring users never have to context-switch between the appliance and the app.", "tags": ["UX·UI", "GUI", "Touch LCD", "Multi-screen", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — IoT 플랫폼 IA 설계, 터치 LCD UX 가이드라인 수립, 컴포넌트 시스템 구축", "duration": "18개월 (진행 중)"}, {"id": 2, "cat": "IoT & Smart Appliances Platform", "title": "Living Appliances Platform UX", "subtitle": "LG IoT 생활가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "An IoT UX platform built for LG's living appliance lineup — washing machines, dryers, and vacuum cleaners. The central design problem was maintaining a consistent, recognizable experience across vastly different screen sizes and input modalities, from small appliance LCDs to full smartphone interfaces. A unified design system was established to bridge these surfaces while preserving the unique interaction characteristics of each device.", "tags": ["UX·UI", "GUI", "Touch LCD", "Remote UX", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 생활가전 IoT UX 플랫폼 설계, 멀티스크린 UX 일관성 확보", "duration": "24개월 (진행 중)"}, {"id": 3, "cat": "IoT & Smart Appliances Platform", "title": "Air Care Appliances Platform UX", "subtitle": "LG IoT 에어케어 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "A dedicated IoT UX platform for LG's air care appliances — air conditioners, purifiers, and dehumidifiers. The design focused on making ambient environmental data — air quality, temperature, humidity — immediately readable and actionable. Beyond real-time monitoring, the platform introduces automation routines and energy efficiency modes, giving users intelligent control over their indoor climate without requiring constant manual input.", "tags": ["UX·UI", "GUI", "Touch LCD", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 에어케어 가전 UX 설계, 환경 데이터 시각화 및 자동화 UX 플로우 정의", "duration": "18개월 (진행 중)"}, {"id": 4, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ Mobile App", "subtitle": "IoT 모바일 앱 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2021", "desc": "The central hub for controlling LG's entire appliance ecosystem from a single mobile app. Spanning dozens of product categories and hundreds of individual features, the core UX challenge was architectural: how to create a scalable, coherent information structure that grows with the product lineup without becoming cluttered or disorienting. The result was a platform designed to be both broadly capable and immediately understandable — regardless of which device a user was managing.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "UX Designer — ThinQ 앱 통합 IA 설계, 멀티 카테고리 UX 아키텍처 구축", "duration": "36개월"}, {"id": 5, "cat": "IoT & Smart Appliances Platform", "title": "LG IDB: Interactive Digital Board", "subtitle": "인터랙티브 디지털 보드 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2019", "desc": "A multi-screen UX system for LG's large-format interactive display, designed for enterprise and education environments. The platform connects the touch display with a companion mobile app, requiring a seamless handoff experience between a shared, high-visibility screen and individual mobile devices. Built on a clean, flat visual system, the interface was designed to support multi-user collaboration without introducing friction — making it easy for groups to contribute, annotate, and navigate together in real time.", "tags": ["UX·UI", "GUI", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "UX Designer — 인터랙티브 디스플레이 UX 설계, 모바일 연동 인터페이스 정의", "duration": "18개월"}, {"id": 6, "cat": "Automotive & In-vehicle UX", "title": "Connected Car Infotainment UI", "subtitle": "후석 인포테인먼트 시스템 디자인", "client": "Hyundai Motors Group", "year": "2020 – 현재", "desc": "A rear-seat infotainment system UI designed to serve multiple brands within the Hyundai Motors Group. The system supports both light and dark themes, adapting to brand identity while operating on a shared UX component architecture underneath. The design balances passenger comfort with functional richness — creating an in-vehicle experience that feels premium, responsive, and brand-authentic across different vehicle lines.", "tags": ["GUI", "Touch LCD", "Multi-screen", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(200,15%,88%)", "thumb_c2": "hsl(200,12%,78%)", "has_svg": true, "role": "Lead UX Designer — 후석 인포테인먼트 UX 설계, 멀티 브랜드 대응 테마 시스템 구축", "duration": "24개월 (진행 중)"}, {"id": 7, "cat": "Mobile & Wearable Platform", "title": "LG Android Mobile Platform UX", "subtitle": "Android 스마트폰·태블릿 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2021", "desc": "An eight-year UX platform initiative covering LG's full range of Android smartphones and tablets. Built on Google's Material Design foundation, the project involved defining and continuously evolving LG's own UX layer on top — creating a differentiated product identity while maintaining compatibility with the broader Android ecosystem. The work spanned from early ideation and system architecture through long-term iteration, scaling across multiple hardware generations.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "Lead UX Designer — Android 플랫폼 UX 레이어 설계, Material Design 커스터마이징", "duration": "96개월"}, {"id": 8, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch W7", "subtitle": "wearOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2017 – 2018", "desc": "A wearOS-based smartwatch UX platform designed around the constraints and opportunities of wrist-worn interaction. With an extremely limited display area and gesture-first input, the project demanded a fundamentally different approach to information hierarchy than conventional screens. The design defines clear patterns for glanceability, input efficiency, and contextual awareness — creating a wearable experience that respects the user's attention and the device's physical scale.", "tags": ["UX·UI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "UX Designer — wearOS 기반 워치 UX 설계, 제스처 인터랙션 패턴 정의", "duration": "14개월"}, {"id": 9, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch Urbane LTE", "subtitle": "webOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2015", "desc": "The foundational UX work for LG's first webOS-based smartwatch, built entirely on LG's proprietary operating system. Without established conventions to follow, the project involved defining a new visual and interaction language from scratch — creating a card-based UI suited to the circular watch face, and architecting an independent app ecosystem designed for the wearable context. This work laid the early groundwork for LG's broader wearable strategy.", "tags": ["GUI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "UX Designer — webOS 워치 플랫폼 UX 설계, 카드 UI 시스템 구축", "duration": "24개월"}, {"id": 10, "cat": "Service & B2C Platform", "title": "Post-purchase B2C UX Solution", "subtitle": "B2C '구매 후 경험' UX 개선 솔루션", "client": "LG Electronics", "year": "2024", "desc": "A strategic UX redesign of the post-purchase journey — from unboxing and setup through first use, product registration, and after-sales support. Research revealed a consistent drop-off in user engagement after purchase, driven by friction in the onboarding experience. The project reframed this as a product design opportunity: by creating a guided, reassuring first-use flow, the solution aimed to reduce abandonment, increase product utilization, and strengthen long-term brand loyalty.", "tags": ["UX·UI", "GUI", "Prototype", "Mobile"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "UX Designer — 구매 후 온보딩 UX 전략 수립, 사용자 여정 재설계", "duration": "8개월"}, {"id": 11, "cat": "Service & B2C Platform", "title": "Laundry Delivery Driver's Platform", "subtitle": "세탁물 배송 기사 전용 플랫폼 구축", "client": "LG Electronics", "year": "2023", "desc": "An operational platform spanning a mobile app for delivery drivers and a control room display for fleet management — designed to support LG's laundry delivery service end-to-end. The platform tracks the full service lifecycle: collection, washing, styling, drying, and delivery, in real time. Three distinct user roles — drivers, crew, and managers — each received purpose-built UI optimized for their specific context and workflow, ensuring clarity and efficiency at every stage of the operation.", "tags": ["UX·UI", "GUI", "Mobile", "Control Room"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "Lead UX Designer — 배송 기사 앱 + 관제센터 UI 설계, 역할별 UI 최적화", "duration": "10개월"}, {"id": 12, "cat": "Service & B2C Platform", "title": "Poly Mate: Live Fitness Platform UX", "subtitle": "인터랙티브 헬스케어 플랫폼 구축", "client": "LG Electronics", "year": "2022", "desc": "A live fitness platform UX designed to bridge the gap between in-studio and at-home workout experiences. The platform connects instructors and participants in real time, creating an interactive environment that preserves the energy and accountability of a group class regardless of physical location. The design spans mobile and web surfaces, with a focus on low-latency interaction, clear visual feedback during sessions, and a motivating experience that keeps users engaged across repeated use.", "tags": ["UX·UI", "GUI", "Mobile", "Web"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "UX Designer — 라이브 피트니스 플랫폼 UX 설계, 모바일·웹 멀티스크린 UX", "duration": "9개월"}];
+const PROJECTS_DEFAULT = PROJECTS.slice();
+// Override with localStorage data if available
+(function(){
+  try {
+    var saved = localStorage.getItem('ccrd_projects');
+    if(saved){
+      var parsed = JSON.parse(saved);
+      if(parsed && parsed.length){ PROJECTS.length=0; parsed.forEach(function(p){ PROJECTS.push(p); }); }
+    }
+  } catch(e){}
+})();
 
 function toggleInfo() {
   var panel = document.getElementById('infoPanel');
@@ -408,19 +474,14 @@ function sendContact() {
 }
 
 function showList() {
+  var fb=document.getElementById('dvFloatBack'); if(fb){ fb.classList.remove('show'); }
   document.getElementById('listView').style.display = '';
   document.getElementById('detailView').style.display = 'none';
   history.pushState({view:'list'}, '', '#works');
   window.scrollTo(0,0);
 }
 
-function filter(btn, cat) {
-  document.querySelectorAll('.fb').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('.gi').forEach(function(el){
-    el.classList.toggle('hidden', cat !== 'all' && el.dataset.cat !== cat);
-  });
-}
+
 
 function navigate(id) {
   var p = PROJECTS[id];
@@ -435,6 +496,24 @@ function navigate(id) {
   (p.tags||[]).forEach(function(t){ var s=document.createElement('span'); s.className = (t==='Ongoing') ? 'dv-ongoing' : 'dv-tag'; s.textContent=t; metaRow.appendChild(s); });
   if(p.ongoing){ var s=document.createElement('span'); s.className='dv-ongoing'; s.textContent='Ongoing'; metaRow.appendChild(s); }
   document.getElementById('dvOverview').textContent = p.desc || '';
+  var gl = document.getElementById('dvGallery');
+  if(gl){
+    gl.innerHTML = '';
+    var imgs = p.images || [];
+    var galleryItems = [imgs[0]||null, imgs[1]||null, imgs[2]||null, imgs[3]||null];
+    for(var gi=0; gi<4; gi++){
+      var d=document.createElement('div'); d.className='dv-gallery-item';
+      if(imgs[gi]){
+        var im=document.createElement('img'); im.src=imgs[gi]; im.alt=''; im.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
+        d.appendChild(im);
+        (function(src,idx,all){ d.addEventListener('click', function(e){ e.stopPropagation(); openLightbox(src,all,idx); }); })(imgs[gi], gi, galleryItems);
+      } else {
+        d.innerHTML='<span class="dv-gallery-ph">Image coming soon</span>';
+        (function(idx,all){ d.addEventListener('click', function(e){ e.stopPropagation(); openLightbox(null,all,idx); }); })(gi, galleryItems);
+      }
+      gl.appendChild(d);
+    }
+  }
   document.getElementById('dvRole').textContent = p.role || '';
   document.getElementById('dvYear').textContent = p.year || '';
   document.getElementById('dvDuration').textContent = p.duration || '';
@@ -442,6 +521,8 @@ function navigate(id) {
 
   var prevP = PROJECTS[id-1];
   var nextP = PROJECTS[id+1];
+  initStickyHeader(p.title);
+  var fb=document.getElementById('dvFloatBack'); if(fb && window.innerWidth<=900){ setTimeout(function(){ fb.classList.add('show'); },200); }
   document.getElementById('dvPrev').style.visibility = prevP ? 'visible' : 'hidden';
   document.getElementById('dvNext').style.visibility = nextP ? 'visible' : 'hidden';
   if(prevP) document.getElementById('dvPrev').onclick = function(){ navigate(id-1); };
@@ -526,6 +607,33 @@ window.addEventListener('scroll', function(){
     ov.classList.remove('show'); document.body.style.overflow = '';
   }); }
 
+
+  // Custom cursor
+  var cur = document.getElementById('cursor');
+  if(cur){
+    document.addEventListener('mousemove', function(e){
+      cur.style.left = e.clientX + 'px';
+      cur.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a,button,.gi,.dv-bread,.sidebar-logo,.dv-sticky-back,.avatar-wrap').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ cur.classList.add('big'); });
+      el.addEventListener('mouseleave', function(){ cur.classList.remove('big'); });
+    });
+  }
+
+  // Detail sticky header
+  var dvStickyEl = document.getElementById('dvSticky');
+  var dvStickyScrollHandler = null;
+  function initStickyHeader(title){
+    document.getElementById('dvStickyTitle').textContent = title || '';
+    if(dvStickyScrollHandler) window.removeEventListener('scroll', dvStickyScrollHandler);
+    dvStickyScrollHandler = function(){
+      if(dvStickyEl) dvStickyEl.classList.toggle('show', window.scrollY > 80);
+    };
+    window.addEventListener('scroll', dvStickyScrollHandler);
+    if(dvStickyEl) dvStickyEl.classList.remove('show');
+  }
+
   document.getElementById('btnInfo').addEventListener('click', toggleInfo);
 document.getElementById('btnContact').addEventListener('click', toggleContact);
 document.getElementById('btnSend').addEventListener('click', sendContact);
@@ -573,6 +681,53 @@ document.getElementById('btnSend').addEventListener('click', sendContact);
       if(measureText) helloBubble.style.width = measureText(helloWords[0]) + 'px';
     }
   }
+
+  var lbImages = [];
+  var lbIndex = 0;
+  function openLightbox(src, allImgs, idx){
+    var lb = document.getElementById('lightbox');
+    if(!lb) return;
+    lbImages = (allImgs && allImgs.length) ? allImgs : (src ? [src] : [null]);
+    lbIndex = idx || 0;
+    lb.classList.add('show');
+    document.body.style.overflow='hidden';
+    lbShow(lbIndex);
+  }
+  function lbShow(i){
+    var img = document.getElementById('lightboxImg');
+    var emp = document.getElementById('lightboxEmpty');
+    var ctr = document.getElementById('lbCounter');
+    var src = lbImages[i];
+    if(src){ img.src=src; img.style.display='block'; if(emp) emp.style.display='none'; }
+    else { img.src=''; img.style.display='none'; if(emp) emp.style.display='block'; }
+    if(ctr) ctr.textContent = (i+1) + ' / ' + lbImages.length;
+    var prev = document.querySelector('.lb-prev');
+    var next = document.querySelector('.lb-next');
+    if(prev) prev.style.opacity = lbImages.length > 1 ? '1' : '0';
+    if(next) next.style.opacity = lbImages.length > 1 ? '1' : '0';
+  }
+  function lbNav(dir){
+    lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+    lbShow(lbIndex);
+  }
+  function closeLightbox(){
+    var lb = document.getElementById('lightbox');
+    if(lb){ lb.classList.remove('show'); document.body.style.overflow=''; }
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape') closeLightbox();
+    if(e.key==='ArrowLeft') lbNav(-1);
+    if(e.key==='ArrowRight') lbNav(1);
+  });
 </script>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">✕</span>
+  <button class="lb-nav lb-prev" onclick="event.stopPropagation();lbNav(-1)"><img src="arrow.svg" style="width:20px;height:20px;"/></button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="" onclick="event.stopPropagation()"/>
+  <span id="lightboxEmpty" style="display:none;color:rgba(255,255,255,.4);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;" onclick="event.stopPropagation()">Image coming soon</span>
+  <button class="lb-nav lb-next" onclick="event.stopPropagation();lbNav(1)"><img src="arrow.svg" style="width:20px;height:20px;transform:rotate(180deg);"/></button>
+  <span class="lb-counter" id="lbCounter"></span>
+</div>
 </body>
 </html>

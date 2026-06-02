@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin — CCRD Portfolio</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#faf9f7;--sf:#f2f1ee;--bd:#e4e2dd;--txt:#111;--mut:#555;--dim:#767676;--red:#e03a1e;--accent:#e56049;}
+body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+/* Layout */
+.app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:280px;flex-shrink:0;background:var(--sf);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden;}
+.sidebar-head{padding:24px 20px 16px;border-bottom:1px solid var(--bd);}
+.sidebar-head h1{font-size:.85rem;font-weight:700;letter-spacing:-.01em;}
+.sidebar-head p{font-size:.68rem;color:var(--dim);margin-top:4px;}
+.sidebar-actions{padding:12px 20px;border-bottom:1px solid var(--bd);display:flex;gap:8px;}
+.btn{font-size:.68rem;font-weight:600;padding:7px 14px;border-radius:40px;border:2px solid var(--txt);background:var(--txt);color:#fff;cursor:pointer;transition:opacity .15s;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;}
+.btn:hover{opacity:.8;}
+.btn-outline{background:transparent;color:var(--txt);}
+.btn-outline:hover{background:var(--txt);color:#fff;opacity:1;}
+.btn-danger{border-color:var(--red);background:var(--red);color:#fff;}
+.btn-sm{font-size:.6rem;padding:5px 10px;}
+.project-list{flex:1;overflow-y:auto;padding:8px 0;}
+.project-item{padding:12px 20px;cursor:pointer;border-bottom:1px solid var(--bd);transition:background .1s;}
+.project-item:hover{background:var(--bd);}
+.project-item.active{background:var(--txt);color:#fff;}
+.project-item.active .pi-cat{color:rgba(255,255,255,.6);}
+.pi-title{font-size:.78rem;font-weight:600;letter-spacing:-.01em;line-height:1.3;margin-bottom:3px;}
+.pi-cat{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;}
+.drag-handle{display:inline-block;margin-right:8px;color:var(--dim);cursor:grab;font-size:.8rem;}
+/* Main editor */
+.main{flex:1;overflow-y:auto;padding:32px 40px 80px;}
+.editor-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
+.editor-head h2{font-size:1.1rem;font-weight:700;letter-spacing:-.02em;}
+.editor-actions{display:flex;gap:8px;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;color:var(--dim);gap:12px;}
+.empty-state p{font-size:.85rem;}
+/* Form */
+.form-section{margin-bottom:40px;}
+.form-section-title{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);padding-bottom:12px;border-bottom:1px solid var(--bd);margin-bottom:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-row.full{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);}
+.field input,.field select,.field textarea{font-size:.82rem;font-family:'Pretendard',sans-serif;color:var(--txt);background:var(--bg);border:none;border-bottom:2px solid var(--bd);padding:8px 0;outline:none;transition:border-color .15s;width:100%;}
+.field input:focus,.field select:focus,.field textarea:focus{border-bottom-color:var(--accent);}
+.field textarea{resize:vertical;min-height:100px;line-height:1.7;}
+.field select{cursor:pointer;}
+/* Tags */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.tag-chip{font-size:.62rem;font-weight:700;border:2px solid var(--txt);color:var(--txt);background:#fff;padding:4px 10px;border-radius:999px;display:flex;align-items:center;gap:6px;letter-spacing:.04em;text-transform:uppercase;}
+.tag-chip .rm{cursor:pointer;opacity:.5;font-size:.7rem;line-height:1;}
+.tag-chip .rm:hover{opacity:1;}
+.tag-input-wrap{display:flex;gap:8px;margin-top:8px;}
+.tag-input-wrap input{flex:1;font-size:.78rem;font-family:'Pretendard',sans-serif;border:none;border-bottom:2px solid var(--bd);padding:6px 0;background:transparent;outline:none;}
+.tag-input-wrap input:focus{border-bottom-color:var(--accent);}
+/* Images */
+.img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.img-slot{aspect-ratio:16/9;background:var(--sf);border:2px dashed var(--bd);border-radius:6px;overflow:hidden;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.img-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-slot .rm-img{position:absolute;top:4px;right:4px;background:var(--txt);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:.7rem;cursor:pointer;display:none;align-items:center;justify-content:center;}
+.img-slot:hover .rm-img{display:flex;}
+.img-slot .add-label{font-size:.58rem;color:var(--dim);text-align:center;letter-spacing:.06em;}
+.thumb-preview{width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:var(--sf);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--dim);}
+.thumb-preview img{width:100%;height:100%;object-fit:cover;}
+/* Ongoing toggle */
+.toggle-wrap{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.toggle{width:40px;height:22px;background:var(--bd);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;}
+.toggle.on{background:var(--accent);}
+.toggle-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;}
+.toggle.on .toggle-knob{left:21px;}
+.toggle-label{font-size:.78rem;color:var(--mut);}
+/* Toast */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--txt);color:#fff;font-size:.72rem;font-weight:600;padding:10px 20px;border-radius:40px;opacity:0;transition:all .25s;pointer-events:none;z-index:9999;letter-spacing:.04em;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-head">
+      <h1>CCRD Admin</h1>
+      <p>Portfolio Manager</p>
+    </div>
+    <div class="sidebar-actions">
+      <button class="btn btn-sm" onclick="newProject()">+ 추가</button>
+      <button class="btn btn-outline btn-sm" onclick="previewSite()">미리보기</button>
+      <button class="btn btn-outline btn-sm" onclick="resetToDefault()">초기화</button>
+    </div>
+    <div class="project-list" id="projectList"></div>
+  </div>
+
+  <!-- Main Editor -->
+  <div class="main" id="main">
+    <div class="empty-state" id="emptyState">
+      <p>좌측에서 프로젝트를 선택하거나 추가하세요</p>
+    </div>
+    <div id="editor" style="display:none;">
+      <div class="editor-head">
+        <h2 id="editorTitle">프로젝트 편집</h2>
+        <div class="editor-actions">
+          <button class="btn btn-danger btn-sm" onclick="deleteProject()">삭제</button>
+          <button class="btn btn-sm" onclick="saveProject()">저장</button>
+        </div>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="form-section">
+        <div class="form-section-title">기본 정보</div>
+        <div class="form-row">
+          <div class="field">
+            <label>카테고리</label>
+            <select id="f-cat">
+              <option>IoT &amp; Smart Appliances Platform</option>
+              <option>Automotive &amp; In-vehicle UX</option>
+              <option>Mobile &amp; Wearable Platform</option>
+              <option>Service &amp; B2C Platform</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>클라이언트</label>
+            <input id="f-client" type="text" placeholder="LG Electronics"/>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="field">
+            <label>프로젝트 제목</label>
+            <input id="f-title" type="text" placeholder="Project Title"/>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="field">
+            <label>서브타이틀</label>
+            <input id="f-subtitle" type="text" placeholder="Short description"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>기간 (Year)</label>
+            <input id="f-year" type="text" placeholder="2023 – 현재"/>
+          </div>
+          <div class="field">
+            <label>Duration</label>
+            <input id="f-duration" type="text" placeholder="12개월 (진행 중)"/>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="field">
+            <label>My Role</label>
+            <input id="f-role" type="text" placeholder="Lead UX Designer — ..."/>
+          </div>
+        </div>
+        <div class="toggle-wrap">
+          <div class="toggle" id="f-ongoing-toggle" onclick="toggleOngoing()">
+            <div class="toggle-knob"></div>
+          </div>
+          <span class="toggle-label">Ongoing 프로젝트</span>
+        </div>
+      </div>
+
+      <!-- Overview -->
+      <div class="form-section">
+        <div class="form-section-title">Overview</div>
+        <div class="form-row full">
+          <div class="field">
+            <label>Overview 텍스트</label>
+            <textarea id="f-desc" placeholder="프로젝트 설명을 입력하세요..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="form-section">
+        <div class="form-section-title">태그</div>
+        <div class="tags-wrap" id="tagsWrap"></div>
+        <div class="tag-input-wrap">
+          <input id="tagInput" type="text" placeholder="태그 입력 후 Enter"/>
+          <button class="btn btn-outline btn-sm" onclick="addTag()">추가</button>
+        </div>
+      </div>
+
+      <!-- Images -->
+      <div class="form-section">
+        <div class="form-section-title">이미지</div>
+        <p style="font-size:.68rem;color:var(--dim);margin-bottom:12px;">첫 번째 이미지가 썸네일로 사용됩니다. 최대 8장.</p>
+        <div class="img-grid" id="imgGrid"></div>
+        <input type="file" id="imgUpload" accept="image/*" multiple style="display:none;" onchange="handleImgUpload(event)"/>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────
+var DEFAULT_PROJECTS = [{"id": 0, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ: 우리단지 B2C Home App", "subtitle": "Home IoT Control Mobile App Design", "client": "LG Electronics", "year": "2023 – 현재", "desc": "A comprehensive smart living app for apartment residents, designed to bring every aspect of community life into a single, intuitive experience.", "tags": ["UX·UI", "GUI", "Mobile", "Ongoing"], "has_ongoing": true, "role": "Lead UX Designer — 전체 UX 전략 수립, 사용자 리서치, 프로토타이핑 및 개발팀 협업", "duration": "12개월 (진행 중)", "images": []}, {"id": 1, "cat": "IoT & Smart Appliances Platform", "title": "Kitchen Appliances Platform UX", "subtitle": "LG IoT 주방가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2021 – 현재", "desc": "A unified IoT UX platform spanning LG's full lineup of kitchen appliances.", "tags": ["UX·UI", "GUI", "Touch LCD", "Multi-screen", "Platform"], "has_ongoing": true, "role": "Lead UX Designer — IoT 플랫폼 IA 설계", "duration": "18개월 (진행 중)", "images": []}];
+
+var projects = [];
+var currentId = null;
+var currentTags = [];
+var currentImages = [];
+var isOngoing = false;
+
+function load() {
+  try {
+    var s = localStorage.getItem('ccrd_projects');
+    if (s) { projects = JSON.parse(s); }
+    else {
+      // Load from index.html default if available, else use short defaults
+      var s2 = localStorage.getItem('ccrd_projects_default');
+      projects = s2 ? JSON.parse(s2) : DEFAULT_PROJECTS;
+    }
+  } catch(e) { projects = DEFAULT_PROJECTS; }
+  renderList();
+}
+
+function save() {
+  localStorage.setItem('ccrd_projects', JSON.stringify(projects));
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+
+// ── List ──────────────────────────────────────────────────────────────────
+function renderList() {
+  var list = document.getElementById('projectList');
+  list.innerHTML = '';
+  projects.forEach(function(p, i) {
+    var div = document.createElement('div');
+    div.className = 'project-item' + (p.id === currentId ? ' active' : '');
+    div.innerHTML = '<span class="drag-handle">⠿</span><div class="pi-title">' + (p.title || '제목 없음') + '</div><div class="pi-cat">' + (p.cat || '') + '</div>';
+    div.onclick = function(){ openProject(p.id); };
+    list.appendChild(div);
+  });
+}
+
+// ── Editor ──────────────────────────────────────────────────────────────────
+function openProject(id) {
+  currentId = id;
+  var p = projects.find(function(x){ return x.id === id; });
+  if (!p) return;
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('editor').style.display = 'block';
+  document.getElementById('editorTitle').textContent = p.title || '제목 없음';
+
+  document.getElementById('f-cat').value = p.cat || '';
+  document.getElementById('f-client').value = p.client || '';
+  document.getElementById('f-title').value = p.title || '';
+  document.getElementById('f-subtitle').value = p.subtitle || '';
+  document.getElementById('f-year').value = p.year || '';
+  document.getElementById('f-duration').value = p.duration || '';
+  document.getElementById('f-role').value = p.role || '';
+  document.getElementById('f-desc').value = p.desc || '';
+
+  isOngoing = !!p.has_ongoing;
+  updateOngoingToggle();
+
+  currentTags = (p.tags || []).slice();
+  renderTags();
+
+  currentImages = (p.images || []).slice();
+  renderImages();
+
+  renderList();
+  document.querySelector('.main').scrollTo(0, 0);
+}
+
+function newProject() {
+  var newId = Date.now();
+  var p = { id: newId, cat: 'IoT & Smart Appliances Platform', title: '새 프로젝트', subtitle: '', client: '', year: '', duration: '', role: '', desc: '', tags: [], has_ongoing: false, images: [] };
+  projects.push(p);
+  save();
+  openProject(newId);
+  showToast('새 프로젝트 추가됨');
+}
+
+function saveProject() {
+  var idx = projects.findIndex(function(x){ return x.id === currentId; });
+  if (idx < 0) return;
+  projects[idx].cat = document.getElementById('f-cat').value;
+  projects[idx].client = document.getElementById('f-client').value;
+  projects[idx].title = document.getElementById('f-title').value;
+  projects[idx].subtitle = document.getElementById('f-subtitle').value;
+  projects[idx].year = document.getElementById('f-year').value;
+  projects[idx].duration = document.getElementById('f-duration').value;
+  projects[idx].role = document.getElementById('f-role').value;
+  projects[idx].desc = document.getElementById('f-desc').value;
+  projects[idx].has_ongoing = isOngoing;
+  projects[idx].tags = currentTags.slice();
+  projects[idx].images = currentImages.slice();
+  save();
+  renderList();
+  document.getElementById('editorTitle').textContent = projects[idx].title || '제목 없음';
+  showToast('저장됨 ✓');
+}
+
+function deleteProject() {
+  if (!confirm('이 프로젝트를 삭제할까요?')) return;
+  projects = projects.filter(function(x){ return x.id !== currentId; });
+  currentId = null;
+  save();
+  document.getElementById('emptyState').style.display = '';
+  document.getElementById('editor').style.display = 'none';
+  renderList();
+  showToast('삭제됨');
+}
+
+// ── Ongoing Toggle ──────────────────────────────────────────────────────────
+function toggleOngoing() {
+  isOngoing = !isOngoing;
+  updateOngoingToggle();
+}
+function updateOngoingToggle() {
+  var t = document.getElementById('f-ongoing-toggle');
+  t.classList.toggle('on', isOngoing);
+}
+
+// ── Tags ──────────────────────────────────────────────────────────────────
+function renderTags() {
+  var wrap = document.getElementById('tagsWrap');
+  wrap.innerHTML = '';
+  currentTags.forEach(function(tag, i) {
+    var chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = tag + '<span class="rm" onclick="removeTag(' + i + ')">✕</span>';
+    wrap.appendChild(chip);
+  });
+}
+function addTag() {
+  var inp = document.getElementById('tagInput');
+  var val = inp.value.trim();
+  if (!val) return;
+  currentTags.push(val);
+  inp.value = '';
+  renderTags();
+}
+function removeTag(i) {
+  currentTags.splice(i, 1);
+  renderTags();
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.activeElement.id === 'tagInput') { e.preventDefault(); addTag(); }
+});
+
+// ── Images ──────────────────────────────────────────────────────────────────
+function renderImages() {
+  var grid = document.getElementById('imgGrid');
+  grid.innerHTML = '';
+  var max = 8;
+  for (var i = 0; i < max; i++) {
+    var slot = document.createElement('div');
+    slot.className = 'img-slot';
+    if (currentImages[i]) {
+      var img = document.createElement('img');
+      img.src = currentImages[i];
+      slot.appendChild(img);
+      var rm = document.createElement('button');
+      rm.className = 'rm-img';
+      rm.textContent = '✕';
+      rm.onclick = (function(idx){ return function(e){ e.stopPropagation(); removeImage(idx); }; })(i);
+      slot.appendChild(rm);
+    } else {
+      slot.innerHTML = '<div class="add-label">+ 이미지<br/>추가</div>';
+      slot.onclick = function(){ document.getElementById('imgUpload').click(); };
+    }
+    grid.appendChild(slot);
+  }
+}
+function handleImgUpload(e) {
+  var files = Array.from(e.target.files);
+  var remaining = 8 - currentImages.length;
+  files.slice(0, remaining).forEach(function(file) {
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      currentImages.push(ev.target.result);
+      renderImages();
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+function removeImage(i) {
+  currentImages.splice(i, 1);
+  renderImages();
+}
+
+// ── Utils ──────────────────────────────────────────────────────────────────
+function previewSite() {
+  window.open('index.html', '_blank');
+}
+function resetToDefault() {
+  if (!confirm('모든 변경사항을 초기화할까요?')) return;
+  localStorage.removeItem('ccrd_projects');
+  location.reload();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+load();
+</script>
+</body>
+</html>
