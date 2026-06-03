@@ -83,23 +83,27 @@
 
   .works-heading{font-size:1.35rem;font-weight:700;letter-spacing:-.03em;margin-bottom:32px;}
 
-  .cat-section{margin-bottom:56px;}
-  .cat-heading{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--txt);padding-bottom:16px;border-bottom:2px solid var(--txt);margin-bottom:28px;}
 
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
-  .gi{cursor:pointer;overflow:hidden;}
-  .gi-thumb{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .grid{columns:2;column-gap:20px;}
+  .gi{break-inside:avoid;margin-bottom:20px;cursor:pointer;overflow:hidden;}
+  .gi-thumb{width:100%;aspect-ratio:4/3;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;} 
+  .gi.tall .gi-thumb{aspect-ratio:3/4;}
+  .gi.wide .gi-thumb{aspect-ratio:16/7;}
+  .gi.sq .gi-thumb{aspect-ratio:1/1;}
+  .gi.short .gi-thumb{aspect-ratio:16/6;}
   .gi-thumb-label{font-size:.58rem;font-family:'Pretendard',sans-serif;color:rgba(0,0,0,.3);letter-spacing:.1em;transition:opacity .3s;}
-  .gi-thumb-overlay{position:absolute;inset:0;background:var(--txt);opacity:0;transition:opacity .35s ease;display:flex;align-items:center;justify-content:center;}
+  .gi-thumb-overlay{position:absolute;inset:0;background:var(--txt);opacity:0;pointer-events:none;transition:opacity .35s ease;display:flex;align-items:center;justify-content:center;}
   .gi-thumb-overlay-text{font-size:.68rem;font-weight:600;color:#fff;letter-spacing:.06em;text-transform:uppercase;transform:translateY(8px);opacity:0;transition:opacity .3s ease,transform .3s ease;}
-  .gi:hover .gi-thumb-overlay{opacity:.88;}
+  .gi:hover .gi-thumb-overlay{opacity:.88;pointer-events:auto;}
   .gi:hover .gi-thumb-overlay-text{opacity:1;transform:translateY(0);}
   .gi:hover .gi-thumb-label{opacity:0;}
   .gi-thumb img,.gi-thumb svg{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+  .gi-thumb-bg{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
   .gi:hover .gi-thumb img,.gi:hover .gi-thumb svg{transform:scale(1.04);}
-  .gi-body{padding:14px 0 8px;}
-  .gi-title{font-size:.95rem;font-weight:600;letter-spacing:-.02em;margin-bottom:5px;line-height:1.3;}
-  .gi-desc{font-size:.75rem;color:var(--dim);line-height:1.7;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+  .gi-body{display:none;}
+  .gi-inner{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 14px;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 100%);z-index:2;}
+  .gi-inner-client{font-size:.55rem;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+  .gi-inner-title{font-size:.82rem;font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.3;}
 
   /* DETAIL VIEW */
   .dv-hero{width:100%;aspect-ratio:16/6;overflow:hidden;background:var(--sf);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--bd);}
@@ -147,7 +151,7 @@
     #listView,#detailView,footer{margin-left:0;}
     .main{padding:32px 20px 80px;}
   .gi-thumb{aspect-ratio:4/3;}
-    .grid{grid-template-columns:1fr;}
+    .grid{columns:1;}
   }
 
   /* Custom cursor */
@@ -250,31 +254,31 @@
 <main id="listView">
   <div class="main">
     <h2 class="works-heading">works</h2>
-    <div id="grid">
-    <div class="cat-section">
-      <div class="cat-heading">IoT &amp; Smart Appliances Platform</div>
-      <div class="grid" id="grid-iot">
-      <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="0" onclick="navigate(0)">
+    <div class="grid" id="grid">
+<article class="gi tall" data-cat="IoT & Smart Appliances Platform" data-id="0" onclick="navigate(0)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
     <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">Home IoT Control Mobile App Design</div><div class="gi-inner-title">LG ThinQ: 우리단지 B2C Home App</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG ThinQ: 우리단지 B2C Home App</div>
     <div class="gi-desc">Home IoT Control Mobile App Design</div>
   </div>
 </article>
-<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="1" onclick="navigate(1)">
+<article class="gi sq" data-cat="IoT & Smart Appliances Platform" data-id="1" onclick="navigate(1)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
     <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">LG IoT 주방가전 플랫폼 UX 구축</div><div class="gi-inner-title">Kitchen Appliances Platform UX</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Kitchen Appliances Platform UX</div>
     <div class="gi-desc">LG IoT 주방가전 플랫폼 UX 구축</div>
   </div>
 </article>
-<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="2" onclick="navigate(2)">
+<article class="gi wide" data-cat="IoT & Smart Appliances Platform" data-id="2" onclick="navigate(2)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
     <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">LG IoT 생활가전 플랫폼 UX 구축</div><div class="gi-inner-title">Living Appliances Platform UX</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Living Appliances Platform UX</div>
@@ -284,112 +288,104 @@
 <article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="3" onclick="navigate(3)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
     <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">LG IoT 에어케어 플랫폼 UX 구축</div><div class="gi-inner-title">Air Care Appliances Platform UX</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Air Care Appliances Platform UX</div>
     <div class="gi-desc">LG IoT 에어케어 플랫폼 UX 구축</div>
   </div>
 </article>
-<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="4" onclick="navigate(4)">
+<article class="gi tall" data-cat="IoT & Smart Appliances Platform" data-id="4" onclick="navigate(4)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
     <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">IoT 모바일 앱 플랫폼 UX 구축</div><div class="gi-inner-title">LG ThinQ Mobile App</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG ThinQ Mobile App</div>
     <div class="gi-desc">IoT 모바일 앱 플랫폼 UX 구축</div>
   </div>
 </article>
-<article class="gi" data-cat="IoT & Smart Appliances Platform" data-id="5" onclick="navigate(5)">
+<article class="gi wide" data-cat="IoT & Smart Appliances Platform" data-id="5" onclick="navigate(5)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eaebec 0%,#d8dadc 100%)">
     <span class="gi-thumb-label">IOT & SMART APPLIANCES PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">인터랙티브 디지털 보드 플랫폼 UX 구축</div><div class="gi-inner-title">LG IDB: Interactive Digital Board</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG IDB: Interactive Digital Board</div>
     <div class="gi-desc">인터랙티브 디지털 보드 플랫폼 UX 구축</div>
   </div>
 </article>
-</div></div>
-    <div class="cat-section">
-      <div class="cat-heading">Automotive &amp; In-vehicle UX</div>
-      <div class="grid" id="grid-auto">
-<article class="gi" data-cat="Automotive & In-vehicle UX" data-id="6" onclick="navigate(6)">
+<article class="gi short" data-cat="Automotive & In-vehicle UX" data-id="6" onclick="navigate(6)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#e8ecee 0%,#d4dadd 100%)">
     <span class="gi-thumb-label">AUTOMOTIVE & IN-VEHICLE UX</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">후석 인포테인먼트 시스템 디자인</div><div class="gi-inner-title">Connected Car Infotainment UI</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Connected Car Infotainment UI</div>
     <div class="gi-desc">후석 인포테인먼트 시스템 디자인</div>
   </div>
 </article>
-</div></div>
-    <div class="cat-section">
-      <div class="cat-heading">Mobile &amp; Wearable Platform</div>
-      <div class="grid" id="grid-mobile">
-<article class="gi" data-cat="Mobile & Wearable Platform" data-id="7" onclick="navigate(7)">
+<article class="gi sq" data-cat="Mobile & Wearable Platform" data-id="7" onclick="navigate(7)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
     <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">Android 스마트폰·태블릿 UI 플랫폼 구축</div><div class="gi-inner-title">LG Android Mobile Platform UX</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">LG Android Mobile Platform UX</div>
     <div class="gi-desc">Android 스마트폰·태블릿 UI 플랫폼 구축</div>
   </div>
 </article>
-<article class="gi" data-cat="Mobile & Wearable Platform" data-id="8" onclick="navigate(8)">
+<article class="gi tall" data-cat="Mobile & Wearable Platform" data-id="8" onclick="navigate(8)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
     <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">wearOS 스마트 워치 UI 플랫폼 구축</div><div class="gi-inner-title">Wearable UX: LG Watch W7</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Wearable UX: LG Watch W7</div>
     <div class="gi-desc">wearOS 스마트 워치 UI 플랫폼 구축</div>
   </div>
 </article>
-<article class="gi" data-cat="Mobile & Wearable Platform" data-id="9" onclick="navigate(9)">
+<article class="gi wide" data-cat="Mobile & Wearable Platform" data-id="9" onclick="navigate(9)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eceaee 0%,#dad6de 100%)">
     <span class="gi-thumb-label">MOBILE & WEARABLE PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">webOS 스마트 워치 UI 플랫폼 구축</div><div class="gi-inner-title">Wearable UX: LG Watch Urbane LTE</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Wearable UX: LG Watch Urbane LTE</div>
     <div class="gi-desc">webOS 스마트 워치 UI 플랫폼 구축</div>
   </div>
 </article>
-</div></div>
-    <div class="cat-section">
-      <div class="cat-heading">Service &amp; B2C Platform</div>
-      <div class="grid" id="grid-service">
-<article class="gi" data-cat="Service & B2C Platform" data-id="10" onclick="navigate(10)">
+<article class="gi short" data-cat="Service & B2C Platform" data-id="10" onclick="navigate(10)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
     <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">B2C '구매 후 경험' UX 개선 솔루션</div><div class="gi-inner-title">Post-purchase B2C UX Solution</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Post-purchase B2C UX Solution</div>
     <div class="gi-desc">B2C '구매 후 경험' UX 개선 솔루션</div>
   </div>
 </article>
-<article class="gi" data-cat="Service & B2C Platform" data-id="11" onclick="navigate(11)">
+<article class="gi sq" data-cat="Service & B2C Platform" data-id="11" onclick="navigate(11)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
     <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">세탁물 배송 기사 전용 플랫폼 구축</div><div class="gi-inner-title">Laundry Delivery Driver's Platform</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Laundry Delivery Driver's Platform</div>
     <div class="gi-desc">세탁물 배송 기사 전용 플랫폼 구축</div>
   </div>
 </article>
-<article class="gi" data-cat="Service & B2C Platform" data-id="12" onclick="navigate(12)">
+<article class="gi tall" data-cat="Service & B2C Platform" data-id="12" onclick="navigate(12)">
   <div class="gi-thumb" style="background:linear-gradient(135deg,#eeedea 0%,#dedad4 100%)">
     <span class="gi-thumb-label">SERVICE & B2C PLATFORM</span><div class="gi-thumb-overlay"><span class="gi-thumb-overlay-text">View Project</span></div>
+  <div class="gi-inner"><div class="gi-inner-client">인터랙티브 헬스케어 플랫폼 구축</div><div class="gi-inner-title">Poly Mate: Live Fitness Platform UX</div></div>
   </div>
   <div class="gi-body">
     <div class="gi-title">Poly Mate: Live Fitness Platform UX</div>
     <div class="gi-desc">인터랙티브 헬스케어 플랫폼 구축</div>
   </div>
 </article>
-    </div>
-  </div>
-  <footer>
-    <span class="footer-copy">© 2025 rokay</span>
-    <span class="footer-email">zzoddo329@gmail.com</span>
-  </footer>
-</main>
+</div>
 
 <div id="detailView">
   <button class="dv-float-back" id="dvFloatBack" onclick="showList()"><img src="arrow.svg" alt="back" style="width:27px;height:27px;transition:transform .25s ease;"/></button>
@@ -429,17 +425,7 @@
 
 <script>
 const PROJECTS = [{"id": 0, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ: 우리단지 B2C Home App", "subtitle": "Home IoT Control Mobile App Design", "client": "LG Electronics", "year": "2023 – 현재", "desc": "A comprehensive smart living app for apartment residents, designed to bring every aspect of community life into a single, intuitive experience. The app covers real-time energy monitoring across electricity, water, gas, heating, and hot water — alongside community services like facility reservations, visitor vehicle management, concierge requests, resident voting, and shuttle bus tracking. The core challenge was making a feature-dense platform feel effortless: organizing complex data hierarchies without overwhelming the user, and maintaining visual clarity across a wide range of use cases.", "tags": ["UX·UI", "GUI", "Mobile", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 전체 UX 전략 수립, 사용자 리서치, 프로토타이핑 및 개발팀 협업", "duration": "12개월 (진행 중)"}, {"id": 1, "cat": "IoT & Smart Appliances Platform", "title": "Kitchen Appliances Platform UX", "subtitle": "LG IoT 주방가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2021 – 현재", "desc": "A unified IoT UX platform spanning LG's full lineup of kitchen appliances — refrigerators, ovens, and cooking devices. The key design challenge was crafting a coherent experience across two distinct interaction surfaces: embedded touch LCD panels on the devices themselves and remote control via smartphone. The platform integrates cooking status monitoring, ingredient management, and recipe connectivity into a single flow, ensuring users never have to context-switch between the appliance and the app.", "tags": ["UX·UI", "GUI", "Touch LCD", "Multi-screen", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — IoT 플랫폼 IA 설계, 터치 LCD UX 가이드라인 수립, 컴포넌트 시스템 구축", "duration": "18개월 (진행 중)"}, {"id": 2, "cat": "IoT & Smart Appliances Platform", "title": "Living Appliances Platform UX", "subtitle": "LG IoT 생활가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "An IoT UX platform built for LG's living appliance lineup — washing machines, dryers, and vacuum cleaners. The central design problem was maintaining a consistent, recognizable experience across vastly different screen sizes and input modalities, from small appliance LCDs to full smartphone interfaces. A unified design system was established to bridge these surfaces while preserving the unique interaction characteristics of each device.", "tags": ["UX·UI", "GUI", "Touch LCD", "Remote UX", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 생활가전 IoT UX 플랫폼 설계, 멀티스크린 UX 일관성 확보", "duration": "24개월 (진행 중)"}, {"id": 3, "cat": "IoT & Smart Appliances Platform", "title": "Air Care Appliances Platform UX", "subtitle": "LG IoT 에어케어 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "A dedicated IoT UX platform for LG's air care appliances — air conditioners, purifiers, and dehumidifiers. The design focused on making ambient environmental data — air quality, temperature, humidity — immediately readable and actionable. Beyond real-time monitoring, the platform introduces automation routines and energy efficiency modes, giving users intelligent control over their indoor climate without requiring constant manual input.", "tags": ["UX·UI", "GUI", "Touch LCD", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 에어케어 가전 UX 설계, 환경 데이터 시각화 및 자동화 UX 플로우 정의", "duration": "18개월 (진행 중)"}, {"id": 4, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ Mobile App", "subtitle": "IoT 모바일 앱 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2021", "desc": "The central hub for controlling LG's entire appliance ecosystem from a single mobile app. Spanning dozens of product categories and hundreds of individual features, the core UX challenge was architectural: how to create a scalable, coherent information structure that grows with the product lineup without becoming cluttered or disorienting. The result was a platform designed to be both broadly capable and immediately understandable — regardless of which device a user was managing.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "UX Designer — ThinQ 앱 통합 IA 설계, 멀티 카테고리 UX 아키텍처 구축", "duration": "36개월"}, {"id": 5, "cat": "IoT & Smart Appliances Platform", "title": "LG IDB: Interactive Digital Board", "subtitle": "인터랙티브 디지털 보드 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2019", "desc": "A multi-screen UX system for LG's large-format interactive display, designed for enterprise and education environments. The platform connects the touch display with a companion mobile app, requiring a seamless handoff experience between a shared, high-visibility screen and individual mobile devices. Built on a clean, flat visual system, the interface was designed to support multi-user collaboration without introducing friction — making it easy for groups to contribute, annotate, and navigate together in real time.", "tags": ["UX·UI", "GUI", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "UX Designer — 인터랙티브 디스플레이 UX 설계, 모바일 연동 인터페이스 정의", "duration": "18개월"}, {"id": 6, "cat": "Automotive & In-vehicle UX", "title": "Connected Car Infotainment UI", "subtitle": "후석 인포테인먼트 시스템 디자인", "client": "Hyundai Motors Group", "year": "2020 – 현재", "desc": "A rear-seat infotainment system UI designed to serve multiple brands within the Hyundai Motors Group. The system supports both light and dark themes, adapting to brand identity while operating on a shared UX component architecture underneath. The design balances passenger comfort with functional richness — creating an in-vehicle experience that feels premium, responsive, and brand-authentic across different vehicle lines.", "tags": ["GUI", "Touch LCD", "Multi-screen", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(200,15%,88%)", "thumb_c2": "hsl(200,12%,78%)", "has_svg": true, "role": "Lead UX Designer — 후석 인포테인먼트 UX 설계, 멀티 브랜드 대응 테마 시스템 구축", "duration": "24개월 (진행 중)"}, {"id": 7, "cat": "Mobile & Wearable Platform", "title": "LG Android Mobile Platform UX", "subtitle": "Android 스마트폰·태블릿 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2021", "desc": "An eight-year UX platform initiative covering LG's full range of Android smartphones and tablets. Built on Google's Material Design foundation, the project involved defining and continuously evolving LG's own UX layer on top — creating a differentiated product identity while maintaining compatibility with the broader Android ecosystem. The work spanned from early ideation and system architecture through long-term iteration, scaling across multiple hardware generations.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "Lead UX Designer — Android 플랫폼 UX 레이어 설계, Material Design 커스터마이징", "duration": "96개월"}, {"id": 8, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch W7", "subtitle": "wearOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2017 – 2018", "desc": "A wearOS-based smartwatch UX platform designed around the constraints and opportunities of wrist-worn interaction. With an extremely limited display area and gesture-first input, the project demanded a fundamentally different approach to information hierarchy than conventional screens. The design defines clear patterns for glanceability, input efficiency, and contextual awareness — creating a wearable experience that respects the user's attention and the device's physical scale.", "tags": ["UX·UI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "UX Designer — wearOS 기반 워치 UX 설계, 제스처 인터랙션 패턴 정의", "duration": "14개월"}, {"id": 9, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch Urbane LTE", "subtitle": "webOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2015", "desc": "The foundational UX work for LG's first webOS-based smartwatch, built entirely on LG's proprietary operating system. Without established conventions to follow, the project involved defining a new visual and interaction language from scratch — creating a card-based UI suited to the circular watch face, and architecting an independent app ecosystem designed for the wearable context. This work laid the early groundwork for LG's broader wearable strategy.", "tags": ["GUI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "UX Designer — webOS 워치 플랫폼 UX 설계, 카드 UI 시스템 구축", "duration": "24개월"}, {"id": 10, "cat": "Service & B2C Platform", "title": "Post-purchase B2C UX Solution", "subtitle": "B2C '구매 후 경험' UX 개선 솔루션", "client": "LG Electronics", "year": "2024", "desc": "A strategic UX redesign of the post-purchase journey — from unboxing and setup through first use, product registration, and after-sales support. Research revealed a consistent drop-off in user engagement after purchase, driven by friction in the onboarding experience. The project reframed this as a product design opportunity: by creating a guided, reassuring first-use flow, the solution aimed to reduce abandonment, increase product utilization, and strengthen long-term brand loyalty.", "tags": ["UX·UI", "GUI", "Prototype", "Mobile"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "UX Designer — 구매 후 온보딩 UX 전략 수립, 사용자 여정 재설계", "duration": "8개월"}, {"id": 11, "cat": "Service & B2C Platform", "title": "Laundry Delivery Driver's Platform", "subtitle": "세탁물 배송 기사 전용 플랫폼 구축", "client": "LG Electronics", "year": "2023", "desc": "An operational platform spanning a mobile app for delivery drivers and a control room display for fleet management — designed to support LG's laundry delivery service end-to-end. The platform tracks the full service lifecycle: collection, washing, styling, drying, and delivery, in real time. Three distinct user roles — drivers, crew, and managers — each received purpose-built UI optimized for their specific context and workflow, ensuring clarity and efficiency at every stage of the operation.", "tags": ["UX·UI", "GUI", "Mobile", "Control Room"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "Lead UX Designer — 배송 기사 앱 + 관제센터 UI 설계, 역할별 UI 최적화", "duration": "10개월"}, {"id": 12, "cat": "Service & B2C Platform", "title": "Poly Mate: Live Fitness Platform UX", "subtitle": "인터랙티브 헬스케어 플랫폼 구축", "client": "LG Electronics", "year": "2022", "desc": "A live fitness platform UX designed to bridge the gap between in-studio and at-home workout experiences. The platform connects instructors and participants in real time, creating an interactive environment that preserves the energy and accountability of a group class regardless of physical location. The design spans mobile and web surfaces, with a focus on low-latency interaction, clear visual feedback during sessions, and a motivating experience that keeps users engaged across repeated use.", "tags": ["UX·UI", "GUI", "Mobile", "Web"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "UX Designer — 라이브 피트니스 플랫폼 UX 설계, 모바일·웹 멀티스크린 UX", "duration": "9개월"}];
-const PROJECTS_DEFAULT = PROJECTS.slice();
-// Override with localStorage data if available
-(function(){
-  try {
-    var saved = localStorage.getItem('ccrd_projects');
-    if(saved){
-      var parsed = JSON.parse(saved);
-      if(parsed && parsed.length){ PROJECTS.length=0; parsed.forEach(function(p){ PROJECTS.push(p); }); }
-    }
-  } catch(e){}
-})();
+
 
 function toggleInfo() {
   var panel = document.getElementById('infoPanel');
@@ -484,7 +470,7 @@ function showList() {
 
 
 function navigate(id) {
-  var p = PROJECTS[id];
+  var p = PROJECTS.find(function(x){ return x.id===id; }) || PROJECTS[id];
   if (!p) return;
   document.getElementById('dvHero').innerHTML = '';
   document.getElementById('dvHero').style.background = 'var(--sf)';
@@ -519,14 +505,15 @@ function navigate(id) {
   document.getElementById('dvDuration').textContent = p.duration || '';
   document.getElementById('dvPlatform').textContent = p.platform || '';
 
-  var prevP = PROJECTS[id-1];
-  var nextP = PROJECTS[id+1];
+  var curIdx = PROJECTS.findIndex(function(x){ return x.id===id; });
+  var prevP = curIdx > 0 ? PROJECTS[curIdx-1] : null;
+  var nextP = curIdx < PROJECTS.length-1 ? PROJECTS[curIdx+1] : null;
   initStickyHeader(p.title);
   var fb=document.getElementById('dvFloatBack'); if(fb && window.innerWidth<=900){ setTimeout(function(){ fb.classList.add('show'); },200); }
   document.getElementById('dvPrev').style.visibility = prevP ? 'visible' : 'hidden';
   document.getElementById('dvNext').style.visibility = nextP ? 'visible' : 'hidden';
-  if(prevP) document.getElementById('dvPrev').onclick = function(){ navigate(id-1); };
-  if(nextP) document.getElementById('dvNext').onclick = function(){ navigate(id+1); };
+  if(prevP) document.getElementById('dvPrev').onclick = function(){ navigate(prevP.id); };
+  if(nextP) document.getElementById('dvNext').onclick = function(){ navigate(nextP.id); };
   document.getElementById('listView').style.display = 'none';
   document.getElementById('detailView').style.display = 'block';
   history.pushState({view:'detail', id:id}, '', '#project-'+id);
@@ -719,6 +706,25 @@ document.getElementById('btnSend').addEventListener('click', sendContact);
     if(e.key==='ArrowLeft') lbNav(-1);
     if(e.key==='ArrowRight') lbNav(1);
   });
+
+  // Update thumbnails from project images
+  (function(){
+    document.querySelectorAll('.gi[data-id]').forEach(function(card){
+      var id = parseInt(card.getAttribute('data-id'));
+      var p = PROJECTS.find(function(x){ return x.id===id; });
+      if(p && p.images && p.images[0]){
+        var thumb = card.querySelector('.gi-thumb');
+        if(thumb){
+          thumb.style.background = 'none';
+          var img = document.createElement('img');
+          img.src = p.images[0];
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;';
+          thumb.style.position = 'relative';
+          thumb.insertBefore(img, thumb.firstChild);
+        }
+      }
+    });
+  })();
 </script>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
