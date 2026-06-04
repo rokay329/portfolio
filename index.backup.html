@@ -24,18 +24,7 @@
     padding:48px 40px;display:flex;flex-direction:column;
     border-right:1px solid var(--bd);background:var(--bg);z-index:100;overflow-y:auto;
   }
-  @keyframes logoWave{
-    0%,15%  { -webkit-mask-position:100% 0; mask-position:100% 0; }
-    85%,100% { -webkit-mask-position:0% 0;  mask-position:0% 0; }
-  }
   .sidebar-logo{margin-bottom:32px;cursor:pointer;line-height:1;}
-  .sidebar-logo img{
-    -webkit-mask-image: linear-gradient(90deg, black 20%, rgba(0,0,0,0.7) 50%, black 80%);
-    mask-image: linear-gradient(90deg, black 20%, rgba(0,0,0,0.7) 50%, black 80%);
-    -webkit-mask-size: 400% 100%;
-    mask-size: 400% 100%;
-    animation: logoWave 9s ease-in-out infinite;
-  }
   .sidebar-logo:hover{opacity:.75;}
   .sidebar-bio{font-size:.82rem;color:var(--mut);line-height:1.85;margin-bottom:32px;padding-left:4px;}
   .sidebar-btns{display:flex;gap:10px;margin-bottom:0;}
@@ -131,7 +120,7 @@
   .dv-section hr{display:none;}
   .dv-body-text{font-size:.95rem;color:var(--mut);line-height:2;}
   .dv-role-badges{display:flex;flex-wrap:wrap;gap:6px;}
-  .dv-role-badge{font-size:.72rem;font-weight:600;color:var(--mut);background:var(--sf);padding:5px 12px;border-radius:4px;letter-spacing:.02em;}
+  .dv-role-badge{font-size:.88rem;color:var(--txt);line-height:1.6;}
   .dv-info-table{margin-top:56px;}
   .dv-info-row{display:flex;gap:24px;padding:14px 0;border-bottom:1px solid var(--bd);}
   .dv-info-row:first-child{border-top:none;}
@@ -881,66 +870,4 @@ document.getElementById('btnSend').addEventListener('click', sendContact);
     if(!lb) return;
     lbImages = (allImgs && allImgs.length) ? allImgs : (src ? [src] : [null]);
     lbIndex = idx || 0;
-    lb.classList.add('show');
-    document.body.style.overflow='hidden';
-    lbShow(lbIndex);
-  }
-  function lbShow(i){
-    var img = document.getElementById('lightboxImg');
-    var emp = document.getElementById('lightboxEmpty');
-    var ctr = document.getElementById('lbCounter');
-    var src = lbImages[i];
-    if(src){ img.src=src; img.style.display='block'; if(emp) emp.style.display='none'; }
-    else { img.src=''; img.style.display='none'; if(emp) emp.style.display='block'; }
-    if(ctr) ctr.textContent = (i+1) + ' / ' + lbImages.length;
-    var prev = document.querySelector('.lb-prev');
-    var next = document.querySelector('.lb-next');
-    if(prev) prev.style.opacity = lbImages.length > 1 ? '1' : '0';
-    if(next) next.style.opacity = lbImages.length > 1 ? '1' : '0';
-  }
-  function lbNav(dir){
-    lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
-    lbShow(lbIndex);
-  }
-  function closeLightbox(){
-    var lb = document.getElementById('lightbox');
-    if(lb){ lb.classList.remove('show'); document.body.style.overflow=''; }
-  }
-  document.addEventListener('keydown', function(e){
-    if(e.key==='Escape') closeLightbox();
-    if(e.key==='ArrowLeft') lbNav(-1);
-    if(e.key==='ArrowRight') lbNav(1);
-  });
-
-  // Update thumbnails from project images (+ NDA placeholder)
-  (function(){
-    document.querySelectorAll('.gi[data-id]').forEach(function(card){
-      var id = parseInt(card.getAttribute('data-id'));
-      var p = PROJECTS.find(function(x){ return x.id===id; });
-      if(!p) return;
-      var thumb = card.querySelector('.gi-thumb');
-      if(!thumb) return;
-      var thumbSrc = p.thumbnail || (p.images && p.images[0]);
-      if(thumbSrc){
-        thumb.style.background = 'none';
-        var img = document.createElement('img');
-        img.src = p.images[0];
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;';
-        thumb.style.position = 'relative';
-        thumb.insertBefore(img, thumb.firstChild);
-      }
-    });
-  })();
-</script>
-
-
-<div class="lightbox" id="lightbox">
-  <span class="lightbox-close" id="lbClose">✕</span>
-  <button class="lb-nav lb-prev" id="lbPrev"><img src="arrow.svg" style="width:20px;height:20px;"/></button>
-  <img class="lightbox-img" id="lightboxImg" src="" alt=""/>
-  <span id="lightboxEmpty" style="display:none;color:rgba(255,255,255,.4);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;" >Image coming soon</span>
-  <button class="lb-nav lb-next" id="lbNext"><img src="arrow.svg" style="width:20px;height:20px;transform:rotate(180deg);"/></button>
-  <span class="lb-counter" id="lbCounter"></span>
-</div>
-</body>
-</html>
+    lb.classList.ad

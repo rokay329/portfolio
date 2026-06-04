@@ -51,6 +51,11 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);m
 .field select{cursor:pointer;}
 /* Tags */
 .tags-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+/* Role selector */
+.role-tags-wrap{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0;}
+.role-tag{font-size:.62rem;font-weight:700;border:2px solid var(--bd);color:var(--dim);background:#fff;padding:7px 14px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:all .15s;user-select:none;}
+.role-tag:hover{border-color:var(--txt);color:var(--txt);}
+.role-tag.active{border-color:var(--txt);background:var(--txt);color:#fff;}
 .tag-chip{font-size:.62rem;font-weight:700;border:2px solid var(--txt);color:var(--txt);background:#fff;padding:4px 10px;border-radius:999px;display:flex;align-items:center;gap:6px;letter-spacing:.04em;text-transform:uppercase;}
 .tag-chip .rm{cursor:pointer;opacity:.5;font-size:.7rem;line-height:1;}
 .tag-chip .rm:hover{opacity:1;}
@@ -152,7 +157,16 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);m
         <div class="form-row full">
           <div class="field">
             <label>My Role</label>
-            <input id="f-role" type="text" placeholder="Lead UX Designer — ..."/>
+            <div class="role-tags-wrap" id="f-roles">
+              <span class="role-tag" onclick="toggleRole(this)">Lead UX Designer</span>
+              <span class="role-tag" onclick="toggleRole(this)">UX Strategist</span>
+              <span class="role-tag" onclick="toggleRole(this)">UX Researcher</span>
+              <span class="role-tag" onclick="toggleRole(this)">Information Architect</span>
+              <span class="role-tag" onclick="toggleRole(this)">Interaction Designer</span>
+              <span class="role-tag" onclick="toggleRole(this)">Visual Designer</span>
+              <span class="role-tag" onclick="toggleRole(this)">Design System Lead</span>
+              <span class="role-tag" onclick="toggleRole(this)">Product Designer</span>
+            </div>
           </div>
         </div>
         <div class="toggle-wrap">
@@ -184,10 +198,21 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);m
         </div>
       </div>
 
+      <!-- Thumbnail -->
+      <div class="form-section">
+        <div class="form-section-title">썸네일</div>
+        <p style="font-size:.68rem;color:var(--dim);margin-bottom:12px;">카드와 상세 헤더에 사용. 없으면 첫 번째 이미지로 대체.</p>
+        <div id="thumbPreviewWrap" style="margin-bottom:12px;">
+          <div class="img-slot" id="thumbSlot" style="max-width:200px;" onclick="document.getElementById('thumbUpload').click()">
+            <div class="add-label">+ 썸네일<br/>업로드</div>
+          </div>
+        </div>
+        <input type="file" id="thumbUpload" accept="image/*" style="display:none;" onchange="handleThumbUpload(event)"/>
+      </div>
       <!-- Images -->
       <div class="form-section">
-        <div class="form-section-title">이미지</div>
-        <p style="font-size:.68rem;color:var(--dim);margin-bottom:12px;">첫 번째 이미지가 썸네일로 사용됩니다. 최대 8장.</p>
+        <div class="form-section-title">상세 이미지</div>
+        <p style="font-size:.68rem;color:var(--dim);margin-bottom:12px;">최대 8장.</p>
         <div class="img-grid" id="imgGrid"></div>
         <input type="file" id="imgUpload" accept="image/*" multiple style="display:none;" onchange="handleImgUpload(event)"/>
       </div>
@@ -206,6 +231,7 @@ var projects = [];
 var currentId = null;
 var currentTags = [];
 var currentImages = [];
+var currentThumb = '';
 var isOngoing = false;
 
 function load() {
@@ -239,6 +265,8 @@ function showToast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 2000);
 }
 
+function toggleRole(el) { el.classList.toggle('active'); }
+
 // ── List ──────────────────────────────────────────────────────────────────
 function renderList() {
   var list = document.getElementById('projectList');
@@ -267,7 +295,8 @@ function openProject(id) {
   document.getElementById('f-subtitle').value = p.subtitle || '';
   document.getElementById('f-year').value = p.year || '';
   document.getElementById('f-duration').value = p.duration || '';
-  document.getElementById('f-role').value = p.role || '';
+  var savedRoles = p.roles && p.roles.length ? p.roles : (p.role ? [p.role.split(' — ')[0].trim()] : []);
+  document.querySelectorAll('#f-roles .role-tag').forEach(function(t){ t.classList.toggle('active', savedRoles.indexOf(t.textContent.trim()) >= 0); });
   document.getElementById('f-desc').value = p.desc || '';
 
   isOngoing = !!p.has_ongoing;
@@ -278,6 +307,8 @@ function openProject(id) {
 
   currentImages = (p.images || []).slice();
   renderImages();
+  currentThumb = p.thumbnail || '';
+  renderThumb();
 
   renderList();
   document.querySelector('.main').scrollTo(0, 0);
@@ -302,11 +333,12 @@ function saveProject() {
   projects[idx].subtitle = document.getElementById('f-subtitle').value;
   projects[idx].year = document.getElementById('f-year').value;
   projects[idx].duration = document.getElementById('f-duration').value;
-  projects[idx].role = document.getElementById('f-role').value;
+  projects[idx].roles = Array.from(document.querySelectorAll('#f-roles .role-tag.active')).map(function(t){ return t.textContent.trim(); });
   projects[idx].desc = document.getElementById('f-desc').value;
   projects[idx].has_ongoing = isOngoing;
   projects[idx].tags = currentTags.slice();
   projects[idx].images = currentImages.slice();
+  projects[idx].thumbnail = currentThumb;
   save();
   renderList();
   document.getElementById('editorTitle').textContent = projects[idx].title || '제목 없음';
@@ -362,6 +394,32 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ── Images ──────────────────────────────────────────────────────────────────
+function renderThumb() {
+  var slot = document.getElementById('thumbSlot');
+  if(!slot) return;
+  slot.innerHTML = '';
+  if(currentThumb){
+    var img = document.createElement('img');
+    img.src = currentThumb;
+    slot.appendChild(img);
+    var rm = document.createElement('button');
+    rm.className = 'rm-img';
+    rm.textContent = '✕';
+    rm.onclick = function(e){ e.stopPropagation(); currentThumb=''; renderThumb(); };
+    slot.appendChild(rm);
+  } else {
+    slot.innerHTML = '<div class="add-label">+ 썸네일<br/>업로드</div>';
+    slot.onclick = function(){ document.getElementById('thumbUpload').click(); };
+  }
+}
+function handleThumbUpload(e) {
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){ currentThumb = ev.target.result; renderThumb(); };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
 function renderImages() {
   var grid = document.getElementById('imgGrid');
   grid.innerHTML = '';
