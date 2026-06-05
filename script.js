@@ -118,15 +118,20 @@ document.addEventListener('DOMContentLoaded', function(){
   (function(){
     var el = document.querySelector('.sidebar-bio');
     if(!el) return;
+    var btns = document.querySelector('.sidebar-btns');
+    // 모바일: bio 숨겨져 있으므로 타이프라이터 스킵, 버튼 즉시 표시
+    if(window.innerWidth <= 900){
+      if(btns) btns.style.animation = 'fadeIn .4s ease forwards';
+      return;
+    }
     var text = el.textContent;
     el.textContent = '';
     el.style.opacity = '1';
     var i = 0;
-    var btns = document.querySelector('.sidebar-btns');
     setTimeout(function type(){
       el.textContent = text.slice(0, ++i);
       if(i < text.length){
-        setTimeout(type, 18);
+        setTimeout(type, 11);
       } else if(btns){
         setTimeout(function(){ btns.style.animation = 'fadeIn .6s ease forwards'; }, 300);
       }
@@ -412,18 +417,12 @@ document.getElementById('btnSend').addEventListener('click', sendContact);
     if(stopTimeoutId){ clearTimeout(stopTimeoutId); stopTimeoutId=null; }
     helloIdx=0;
     if(helloBubble){
-      if(morphTo && _p1){ morphTo(_p1); }
       helloBubble.style.transition = 'transform .22s ease, opacity .2s ease';
       helloBubble.style.transform = 'scale(0)';
       helloBubble.style.opacity = '0';
       setTimeout(function(){
-        helloIdx = 0;
         helloBubble.textContent = helloWords[0];
         helloBubble.style.width = measureText(helloWords[0]) + 'px';
-        if(morphTo && _p2){ morphTo(_p2); }
-        helloBubble.style.transition = 'transform .35s cubic-bezier(.34,1.4,.64,1), opacity .2s ease';
-        helloBubble.style.transform = 'scale(1)';
-        helloBubble.style.opacity = '1';
-      }, 180);
+      }, 220);
     }
   }
