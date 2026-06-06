@@ -232,22 +232,31 @@ function sendContact() {
 // ── Init ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
 
-  // Typewriter for sidebar bio
+  // Typewriter for sidebar bio (line by line)
   (function() {
     var el = document.querySelector('.sidebar-bio');
     if (!el) return;
     var btns = document.querySelector('.sidebar-btns');
+
     if (window.innerWidth <= 900) {
       if (btns) btns.style.animation = 'fadeIn .4s ease forwards';
       return;
     }
-    var text = el.textContent;
-    el.textContent = '';
+
+    var part1 = 'Senior UX/UI Designer with over';
+    var part2 = '15 years of experience crafting intuitive, human-centered experiences for complex digital products.';
+    var total = part1.length + part2.length;
+    el.innerHTML = '';
     el.style.opacity = '1';
     var i = 0;
     setTimeout(function type() {
-      el.textContent = text.slice(0, ++i);
-      if (i < text.length) {
+      i++;
+      if (i <= part1.length) {
+        el.innerHTML = part1.slice(0, i);
+      } else {
+        el.innerHTML = part1 + '<br>' + part2.slice(0, i - part1.length);
+      }
+      if (i < total) {
         setTimeout(type, 11);
       } else if (btns) {
         setTimeout(function() { btns.style.animation = 'fadeIn .6s ease forwards'; }, 300);
@@ -267,6 +276,50 @@ document.addEventListener('DOMContentLoaded', function() {
       thumb.style.background = palette[idx];
     }
   });
+
+  // Category filter
+  (function() {
+    var filterEl = document.getElementById('catFilter');
+    if (!filterEl) return;
+
+    var labels = {
+      'all': 'All',
+      'IoT & Smart Appliances Platform': 'IoT & Smart Appliances',
+      'Automotive & In-vehicle UX': 'Automotive & In-vehicle',
+      'Mobile & Wearable Platform': 'Mobile & Wearable',
+      'Service & B2C Platform': 'Service & B2C'
+    };
+
+    var cats = ['all'];
+    PROJECTS.forEach(function(p) {
+      if (p.cat && cats.indexOf(p.cat) < 0) cats.push(p.cat);
+    });
+
+    cats.forEach(function(cat, i) {
+      var span = document.createElement('span');
+      span.className = 'cat-item' + (cat === 'all' ? ' active' : '');
+      span.setAttribute('data-cat', cat);
+      span.textContent = (labels[cat] || cat) + (i < cats.length - 1 ? ',' : '');
+      filterEl.appendChild(span);
+    });
+
+    filterEl.addEventListener('click', function(e) {
+      var item = e.target.closest('.cat-item');
+      if (!item) return;
+      var selectedCat = item.getAttribute('data-cat');
+      document.querySelectorAll('.cat-item').forEach(function(ci) { ci.classList.remove('active'); });
+      item.classList.add('active');
+      document.querySelectorAll('.gi[data-id]').forEach(function(card) {
+        if (selectedCat === 'all') {
+          card.style.display = '';
+        } else {
+          var id = parseInt(card.getAttribute('data-id'));
+          var p = PROJECTS.find(function(x) { return x.id === id; });
+          card.style.display = (p && p.cat === selectedCat) ? '' : 'none';
+        }
+      });
+    });
+  })();
 
   // Grid click → open project
   var grid = document.getElementById('grid');
