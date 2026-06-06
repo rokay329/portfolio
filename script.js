@@ -47,7 +47,6 @@ function navigate(id) {
   if (!p) return;
 
   // Text content
-  document.getElementById('dvClient').textContent = p.client || '';
   document.getElementById('dvTitle').textContent = p.title || '';
 document.getElementById('dvOverview').textContent = p.desc || '';
 
@@ -62,8 +61,8 @@ document.getElementById('dvOverview').textContent = p.desc || '';
     badgesEl.appendChild(b);
   });
 
-  document.getElementById('dvYear').textContent = p.year || '';
-  document.getElementById('dvDuration').textContent = p.duration || '';
+  document.getElementById('dvYear').textContent = p.duration || '';
+  document.getElementById('dvDuration').textContent = p.client || '';
   document.getElementById('dvPlatform').textContent = p.platform || '';
 
   // Tools
