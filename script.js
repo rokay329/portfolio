@@ -197,7 +197,7 @@ function toggleInfo() {
   bc.classList.remove('active');
   panel.classList.toggle('open', !isOpen);
   btn.classList.toggle('active', !isOpen);
-  if (window.innerWidth <= 900) {
+  if (window.innerWidth <= 1280) {
     ov.classList.toggle('show', !isOpen);
     document.body.style.overflow = !isOpen ? 'hidden' : '';
   }
@@ -214,7 +214,7 @@ function toggleContact() {
   bi.classList.remove('active');
   panel.classList.toggle('open', !isOpen);
   btn.classList.toggle('active', !isOpen);
-  if (window.innerWidth <= 900) {
+  if (window.innerWidth <= 1280) {
     ov.classList.toggle('show', !isOpen);
     document.body.style.overflow = !isOpen ? 'hidden' : '';
   }
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!el) return;
     var btns = document.querySelector('.sidebar-btns');
 
-    if (window.innerWidth <= 900) {
+    if (window.innerWidth <= 1280) {
       if (btns) btns.style.animation = 'fadeIn .4s ease forwards';
       return;
     }
@@ -544,15 +544,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Desktop: hover
     wrap.addEventListener('mouseenter', function() {
-      if (window.innerWidth > 900) { morphTo(path2); showBubble(); }
+      if (window.innerWidth > 1280) { morphTo(path2); showBubble(); }
     });
     wrap.addEventListener('mouseleave', function() {
-      if (window.innerWidth > 900) { morphTo(path1); hideBubble(); }
+      if (window.innerWidth > 1280) { morphTo(path1); hideBubble(); }
     });
 
     // Mobile: tap toggle
     wrap.addEventListener('click', function() {
-      if (window.innerWidth <= 900) {
+      if (window.innerWidth <= 1280) {
         if (avatarState === 1) {
           morphTo(path2);
           avatarState = 2;

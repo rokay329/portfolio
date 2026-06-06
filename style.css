@@ -128,12 +128,12 @@
   .dv-tool-icon:hover{opacity:1;}
 
   .dv-role-badges{display:flex;flex-wrap:wrap;gap:0 16px;}
-  .dv-role-badge{font-size:1.8rem;font-weight:200;color:var(--txt);background:none;padding:0;border-radius:0;line-height:1.6;letter-spacing:-.03em;}
+  .dv-role-badge,.dv-info-val{font-size:2.2rem;font-weight:500;color:var(--txt);line-height:1.6;letter-spacing:-.03em;}
+  .dv-role-badge{background:none;padding:0;border-radius:0;}
 
   .dv-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding-bottom:40px;}
   .dv-info-cell{display:flex;flex-direction:column;gap:7px;}
   .dv-info-key{font-size:.65rem;text-transform:uppercase;letter-spacing:.13em;color:var(--dim);}
-  .dv-info-val{font-size:1.8rem;font-weight:200;color:var(--txt);line-height:1.6;letter-spacing:-.03em;}
 
   /* Slide counter */
   .dv-slide-count{position:absolute;top:150px;right:40px;font-size:1.26vw;font-weight:200;color:var(--txt);letter-spacing:-.02em;z-index:10;line-height:1;}
@@ -202,7 +202,7 @@
   .dv-float-back:active{transform:scale(.93);}
 
   /* ─── MOBILE ─── */
-  @media(max-width:900px){
+  @media(max-width:1280px){
     *{cursor:auto!important;}
     #cursor{display:none;}
     :root{--sidebar:0px;}
@@ -224,7 +224,7 @@
     .dv-nav{display:flex;justify-content:space-between;align-items:center;padding:24px 24px 80px;}
     #detailView{height:auto;overflow:visible;}
     .dv-slider{height:60vw;min-height:200px;}
-    .dv-info-val{font-size:1.2rem;}
+    .dv-role-badge,.dv-info-val{font-size:1.2rem;}
     .cat-filter{font-size:2rem;}
     .dv-title{font-size:clamp(1.6rem,6vw,2.4rem);}
     .dv-sticky{left:0;}
