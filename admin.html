@@ -4,8 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Admin — CCRD Portfolio</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
-<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#faf9f7;--sf:#f2f1ee;--bd:#e4e2dd;--txt:#111;--mut:#555;--dim:#767676;--red:#e03a1e;--accent:#e56049;}
@@ -22,6 +21,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);m
 .btn-outline{background:transparent;color:var(--txt);}
 .btn-outline:hover{background:var(--txt);color:#fff;opacity:1;}
 .btn-danger{border-color:var(--red);background:var(--red);color:#fff;}
+.btn-accent{border-color:var(--accent);background:var(--accent);color:#fff;}
 .btn-sm{font-size:.6rem;padding:5px 10px;}
 .project-list{flex:1;overflow-y:auto;padding:8px 0;}
 .project-item{padding:12px 20px;cursor:pointer;border-bottom:1px solid var(--bd);transition:background .1s;}
@@ -56,6 +56,13 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);m
 .role-tag{font-size:.62rem;font-weight:700;border:2px solid var(--bd);color:var(--dim);background:#fff;padding:7px 14px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:all .15s;user-select:none;}
 .role-tag:hover{border-color:var(--txt);color:var(--txt);}
 .role-tag.active{border-color:var(--txt);background:var(--txt);color:#fff;}
+/* Tool selector */
+.tool-tags-wrap{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0;}
+.tool-tag{display:flex;align-items:center;gap:6px;font-size:.62rem;font-weight:600;border:2px solid var(--bd);color:var(--dim);background:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s;user-select:none;}
+.tool-tag:hover{border-color:var(--txt);color:var(--txt);}
+.tool-tag.active{border-color:var(--txt);background:var(--txt);color:#fff;}
+.tool-tag.active img{filter:invert(1);}
+.tool-tag img{width:14px;height:14px;opacity:.7;}
 .tag-chip{font-size:.62rem;font-weight:700;border:2px solid var(--txt);color:var(--txt);background:#fff;padding:4px 10px;border-radius:999px;display:flex;align-items:center;gap:6px;letter-spacing:.04em;text-transform:uppercase;}
 .tag-chip .rm{cursor:pointer;opacity:.5;font-size:.7rem;line-height:1;}
 .tag-chip .rm:hover{opacity:1;}
@@ -94,7 +101,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);m
     <div class="sidebar-actions">
       <button class="btn btn-sm" onclick="newProject()">+ 추가</button>
       <button class="btn btn-outline btn-sm" onclick="previewSite()">미리보기</button>
-      <button class="btn btn-sm" style="background:#e56049;border-color:#e56049;" onclick="exportHTML()">내보내기</button>
+      <button class="btn btn-sm btn-accent" onclick="exportHTML()">내보내기</button>
       <button class="btn btn-outline btn-sm" onclick="resetToDefault()">초기화</button>
     </div>
     <div class="project-list" id="projectList"></div>
@@ -166,6 +173,22 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--txt);m
               <span class="role-tag" onclick="toggleRole(this)">Visual Designer</span>
               <span class="role-tag" onclick="toggleRole(this)">Design System Lead</span>
               <span class="role-tag" onclick="toggleRole(this)">Product Designer</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="field">
+            <label>Tools</label>
+            <div class="tool-tags-wrap" id="f-tools">
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Figma"><img src="https://cdn.simpleicons.org/figma/555">Figma</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Sketch"><img src="https://cdn.simpleicons.org/sketch/555">Sketch</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Adobe XD"><img src="https://cdn.simpleicons.org/adobexd/555">Adobe XD</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="ProtoPie"><img src="https://cdn.simpleicons.org/protopie/555">ProtoPie</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Framer"><img src="https://cdn.simpleicons.org/framer/555">Framer</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Miro"><img src="https://cdn.simpleicons.org/miro/555">Miro</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Jira"><img src="https://cdn.simpleicons.org/jira/555">Jira</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Notion"><img src="https://cdn.simpleicons.org/notion/555">Notion</span>
+              <span class="tool-tag" onclick="toggleTool(this)" data-tool="Zeplin"><img src="https://cdn.simpleicons.org/zeplin/555">Zeplin</span>
             </div>
           </div>
         </div>
@@ -266,6 +289,7 @@ function showToast(msg) {
 }
 
 function toggleRole(el) { el.classList.toggle('active'); }
+function toggleTool(el) { el.classList.toggle('active'); }
 
 // ── List ──────────────────────────────────────────────────────────────────
 function renderList() {
@@ -297,6 +321,8 @@ function openProject(id) {
   document.getElementById('f-duration').value = p.duration || '';
   var savedRoles = p.roles && p.roles.length ? p.roles : (p.role ? [p.role.split(' — ')[0].trim()] : []);
   document.querySelectorAll('#f-roles .role-tag').forEach(function(t){ t.classList.toggle('active', savedRoles.indexOf(t.textContent.trim()) >= 0); });
+  var savedTools = p.tools || [];
+  document.querySelectorAll('#f-tools .tool-tag').forEach(function(t){ t.classList.toggle('active', savedTools.indexOf(t.getAttribute('data-tool')) >= 0); });
   document.getElementById('f-desc').value = p.desc || '';
 
   isOngoing = !!p.has_ongoing;
@@ -334,6 +360,7 @@ function saveProject() {
   projects[idx].year = document.getElementById('f-year').value;
   projects[idx].duration = document.getElementById('f-duration').value;
   projects[idx].roles = Array.from(document.querySelectorAll('#f-roles .role-tag.active')).map(function(t){ return t.textContent.trim(); });
+  projects[idx].tools = Array.from(document.querySelectorAll('#f-tools .tool-tag.active')).map(function(t){ return t.getAttribute('data-tool'); });
   projects[idx].desc = document.getElementById('f-desc').value;
   projects[idx].has_ongoing = isOngoing;
   projects[idx].tags = currentTags.slice();
