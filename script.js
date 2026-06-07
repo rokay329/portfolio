@@ -302,6 +302,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })();
 
+  // 모바일 스크롤 기반 카드 오버레이 (Intersection Observer)
+  if (window.innerWidth <= 1280) {
+    var cardObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        entry.target.classList.toggle('is-active', entry.isIntersecting);
+      });
+    }, { rootMargin: '-25% 0px -25% 0px', threshold: 0 });
+
+    document.querySelectorAll('.gi[data-id]').forEach(function(card) {
+      cardObserver.observe(card);
+    });
+  }
+
   // Grid 카드 접근성 — tabindex, aria-label, 키보드 지원
   document.querySelectorAll('.gi[data-id]').forEach(function(card) {
     var id = parseInt(card.getAttribute('data-id'));
