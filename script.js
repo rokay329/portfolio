@@ -2,33 +2,7 @@
 const PROJECTS = [{"id": 0, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ: 우리단지 B2C Home App", "subtitle": "Home IoT Control Mobile App Design", "client": "LG Electronics", "year": "2023 – 현재", "desc": "A comprehensive smart living app for apartment residents, designed to bring every aspect of community life into a single, intuitive experience. The app covers real-time energy monitoring across electricity, water, gas, heating, and hot water — alongside community services like facility reservations, visitor vehicle management, concierge requests, resident voting, and shuttle bus tracking. The core challenge was making a feature-dense platform feel effortless: organizing complex data hierarchies without overwhelming the user, and maintaining visual clarity across a wide range of use cases.", "tags": ["UX·UI", "GUI", "Mobile", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 전체 UX 전략 수립, 사용자 리서치, 프로토타이핑 및 개발팀 협업", "duration": "12개월 (진행 중)"}, {"id": 1, "cat": "IoT & Smart Appliances Platform", "title": "Kitchen Appliances Platform UX", "subtitle": "LG IoT 주방가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2021 – 현재", "desc": "A unified IoT UX platform spanning LG's full lineup of kitchen appliances — refrigerators, ovens, and cooking devices. The key design challenge was crafting a coherent experience across two distinct interaction surfaces: embedded touch LCD panels on the devices themselves and remote control via smartphone. The platform integrates cooking status monitoring, ingredient management, and recipe connectivity into a single flow, ensuring users never have to context-switch between the appliance and the app.", "tags": ["UX·UI", "GUI", "Touch LCD", "Multi-screen", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — IoT 플랫폼 IA 설계, 터치 LCD UX 가이드라인 수립, 컴포넌트 시스템 구축", "duration": "18개월 (진행 중)"}, {"id": 2, "cat": "IoT & Smart Appliances Platform", "title": "Living Appliances Platform UX", "subtitle": "LG IoT 생활가전 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "An IoT UX platform built for LG's living appliance lineup — washing machines, dryers, and vacuum cleaners. The central design problem was maintaining a consistent, recognizable experience across vastly different screen sizes and input modalities, from small appliance LCDs to full smartphone interfaces. A unified design system was established to bridge these surfaces while preserving the unique interaction characteristics of each device.", "tags": ["UX·UI", "GUI", "Touch LCD", "Remote UX", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 생활가전 IoT UX 플랫폼 설계, 멀티스크린 UX 일관성 확보", "duration": "24개월 (진행 중)"}, {"id": 3, "cat": "IoT & Smart Appliances Platform", "title": "Air Care Appliances Platform UX", "subtitle": "LG IoT 에어케어 플랫폼 UX 구축", "client": "LG Electronics", "year": "2020 – 현재", "desc": "A dedicated IoT UX platform for LG's air care appliances — air conditioners, purifiers, and dehumidifiers. The design focused on making ambient environmental data — air quality, temperature, humidity — immediately readable and actionable. Beyond real-time monitoring, the platform introduces automation routines and energy efficiency modes, giving users intelligent control over their indoor climate without requiring constant manual input.", "tags": ["UX·UI", "GUI", "Touch LCD", "Platform"], "has_ongoing": true, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "Lead UX Designer — 에어케어 가전 UX 설계, 환경 데이터 시각화 및 자동화 UX 플로우 정의", "duration": "18개월 (진행 중)"}, {"id": 4, "cat": "IoT & Smart Appliances Platform", "title": "LG ThinQ Mobile App", "subtitle": "IoT 모바일 앱 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2021", "desc": "The central hub for controlling LG's entire appliance ecosystem from a single mobile app. Spanning dozens of product categories and hundreds of individual features, the core UX challenge was architectural: how to create a scalable, coherent information structure that grows with the product lineup without becoming cluttered or disorienting. The result was a platform designed to be both broadly capable and immediately understandable — regardless of which device a user was managing.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "UX Designer — ThinQ 앱 통합 IA 설계, 멀티 카테고리 UX 아키텍처 구축", "duration": "36개월"}, {"id": 5, "cat": "IoT & Smart Appliances Platform", "title": "LG IDB: Interactive Digital Board", "subtitle": "인터랙티브 디지털 보드 플랫폼 UX 구축", "client": "LG Electronics", "year": "2018 – 2019", "desc": "A multi-screen UX system for LG's large-format interactive display, designed for enterprise and education environments. The platform connects the touch display with a companion mobile app, requiring a seamless handoff experience between a shared, high-visibility screen and individual mobile devices. Built on a clean, flat visual system, the interface was designed to support multi-user collaboration without introducing friction — making it easy for groups to contribute, annotate, and navigate together in real time.", "tags": ["UX·UI", "GUI", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(220,12%,92%)", "thumb_c2": "hsl(220,10%,84%)", "has_svg": true, "role": "UX Designer — 인터랙티브 디스플레이 UX 설계, 모바일 연동 인터페이스 정의", "duration": "18개월"}, {"id": 6, "cat": "Automotive & In-vehicle UX", "title": "Connected Car Infotainment UI", "subtitle": "후석 인포테인먼트 시스템 디자인", "client": "Hyundai Motors Group", "year": "2020 – 현재", "desc": "A rear-seat infotainment system UI designed to serve multiple brands within the Hyundai Motors Group. The system supports both light and dark themes, adapting to brand identity while operating on a shared UX component architecture underneath. The design balances passenger comfort with functional richness — creating an in-vehicle experience that feels premium, responsive, and brand-authentic across different vehicle lines.", "tags": ["GUI", "Touch LCD", "Multi-screen", "Ongoing"], "has_ongoing": true, "thumb_c1": "hsl(200,15%,88%)", "thumb_c2": "hsl(200,12%,78%)", "has_svg": true, "role": "Lead UX Designer — 후석 인포테인먼트 UX 설계, 멀티 브랜드 대응 테마 시스템 구축", "duration": "24개월 (진행 중)"}, {"id": 7, "cat": "Mobile & Wearable Platform", "title": "LG Android Mobile Platform UX", "subtitle": "Android 스마트폰·태블릿 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2021", "desc": "An eight-year UX platform initiative covering LG's full range of Android smartphones and tablets. Built on Google's Material Design foundation, the project involved defining and continuously evolving LG's own UX layer on top — creating a differentiated product identity while maintaining compatibility with the broader Android ecosystem. The work spanned from early ideation and system architecture through long-term iteration, scaling across multiple hardware generations.", "tags": ["GUI", "Platform", "Multi-screen"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "Lead UX Designer — Android 플랫폼 UX 레이어 설계, Material Design 커스터마이징", "duration": "96개월"}, {"id": 8, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch W7", "subtitle": "wearOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2017 – 2018", "desc": "A wearOS-based smartwatch UX platform designed around the constraints and opportunities of wrist-worn interaction. With an extremely limited display area and gesture-first input, the project demanded a fundamentally different approach to information hierarchy than conventional screens. The design defines clear patterns for glanceability, input efficiency, and contextual awareness — creating a wearable experience that respects the user's attention and the device's physical scale.", "tags": ["UX·UI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "UX Designer — wearOS 기반 워치 UX 설계, 제스처 인터랙션 패턴 정의", "duration": "14개월"}, {"id": 9, "cat": "Mobile & Wearable Platform", "title": "Wearable UX: LG Watch Urbane LTE", "subtitle": "webOS 스마트 워치 UI 플랫폼 구축", "client": "LG Electronics", "year": "2013 – 2015", "desc": "The foundational UX work for LG's first webOS-based smartwatch, built entirely on LG's proprietary operating system. Without established conventions to follow, the project involved defining a new visual and interaction language from scratch — creating a card-based UI suited to the circular watch face, and architecting an independent app ecosystem designed for the wearable context. This work laid the early groundwork for LG's broader wearable strategy.", "tags": ["GUI", "Platform"], "has_ongoing": false, "thumb_c1": "hsl(250,12%,90%)", "thumb_c2": "hsl(250,10%,82%)", "has_svg": true, "role": "UX Designer — webOS 워치 플랫폼 UX 설계, 카드 UI 시스템 구축", "duration": "24개월"}, {"id": 10, "cat": "Service & B2C Platform", "title": "Post-purchase B2C UX Solution", "subtitle": "B2C '구매 후 경험' UX 개선 솔루션", "client": "LG Electronics", "year": "2024", "desc": "A strategic UX redesign of the post-purchase journey — from unboxing and setup through first use, product registration, and after-sales support. Research revealed a consistent drop-off in user engagement after purchase, driven by friction in the onboarding experience. The project reframed this as a product design opportunity: by creating a guided, reassuring first-use flow, the solution aimed to reduce abandonment, increase product utilization, and strengthen long-term brand loyalty.", "tags": ["UX·UI", "GUI", "Prototype", "Mobile"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "UX Designer — 구매 후 온보딩 UX 전략 수립, 사용자 여정 재설계", "duration": "8개월"}, {"id": 11, "cat": "Service & B2C Platform", "title": "Laundry Delivery Driver's Platform", "subtitle": "세탁물 배송 기사 전용 플랫폼 구축", "client": "LG Electronics", "year": "2023", "desc": "An operational platform spanning a mobile app for delivery drivers and a control room display for fleet management — designed to support LG's laundry delivery service end-to-end. The platform tracks the full service lifecycle: collection, washing, styling, drying, and delivery, in real time. Three distinct user roles — drivers, crew, and managers — each received purpose-built UI optimized for their specific context and workflow, ensuring clarity and efficiency at every stage of the operation.", "tags": ["UX·UI", "GUI", "Mobile", "Control Room"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "Lead UX Designer — 배송 기사 앱 + 관제센터 UI 설계, 역할별 UI 최적화", "duration": "10개월"}, {"id": 12, "cat": "Service & B2C Platform", "title": "Poly Mate: Live Fitness Platform UX", "subtitle": "인터랙티브 헬스케어 플랫폼 구축", "client": "LG Electronics", "year": "2022", "desc": "A live fitness platform UX designed to bridge the gap between in-studio and at-home workout experiences. The platform connects instructors and participants in real time, creating an interactive environment that preserves the energy and accountability of a group class regardless of physical location. The design spans mobile and web surfaces, with a focus on low-latency interaction, clear visual feedback during sessions, and a motivating experience that keeps users engaged across repeated use.", "tags": ["UX·UI", "GUI", "Mobile", "Web"], "has_ongoing": false, "thumb_c1": "hsl(30,12%,90%)", "thumb_c2": "hsl(30,10%,82%)", "has_svg": true, "role": "UX Designer — 라이브 피트니스 플랫폼 UX 설계, 모바일·웹 멀티스크린 UX", "duration": "9개월"}];
 
 // ── Module state ───────────────────────────────────────────
-var lbImages = [], lbIndex = 0;
 var _sliderGo = null;
-
-// ── Lightbox ───────────────────────────────────────────────
-function lbShow() {
-  var lb = document.getElementById('lightbox');
-  var lbImg = document.getElementById('lbImg');
-  var lbCounter = document.getElementById('lbCounter');
-  if (!lb || !lbImages.length) return;
-  var src = lbImages[lbIndex];
-  if (src) { lbImg.src = src; lbImg.style.display = ''; }
-  else { lbImg.style.display = 'none'; }
-  lbCounter.textContent = lbImages.length > 1 ? (lbIndex + 1) + ' / ' + lbImages.length : '';
-  lb.classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeLightbox() {
-  var lb = document.getElementById('lightbox');
-  if (lb) lb.classList.remove('show');
-  document.body.style.overflow = '';
-}
-
-function lbNav(dir) {
-  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
-  lbShow();
-}
 
 // ── View navigation ────────────────────────────────────────
 function showList() {
@@ -298,10 +272,18 @@ document.addEventListener('DOMContentLoaded', function() {
       var span = document.createElement('span');
       span.className = 'cat-item' + (cat === 'all' ? ' active' : '');
       span.setAttribute('data-cat', cat);
+      span.setAttribute('role', 'button');
+      span.setAttribute('tabindex', '0');
       span.textContent = (labels[cat] || cat) + (i < cats.length - 1 ? ',' : '');
       filterEl.appendChild(span);
     });
 
+    filterEl.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        var item = e.target.closest('.cat-item');
+        if (item) { e.preventDefault(); item.click(); }
+      }
+    });
     filterEl.addEventListener('click', function(e) {
       var item = e.target.closest('.cat-item');
       if (!item) return;
@@ -320,6 +302,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })();
 
+  // Grid 카드 접근성 — tabindex, aria-label, 키보드 지원
+  document.querySelectorAll('.gi[data-id]').forEach(function(card) {
+    var id = parseInt(card.getAttribute('data-id'));
+    var p = PROJECTS.find(function(x) { return x.id === id; });
+    if (p) card.setAttribute('aria-label', p.title);
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(id); }
+    });
+  });
+
   // Grid click → open project
   var grid = document.getElementById('grid');
   if (grid) {
@@ -329,10 +323,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Back buttons
+  // Back buttons — 클릭 + 키보드 지원
   ['dvStickyBack', 'dvFloatBack', 'btnShowList', 'dvBackBtn'].forEach(function(id) {
     var el = document.getElementById(id);
-    if (el) el.addEventListener('click', showList);
+    if (!el) return;
+    el.addEventListener('click', showList);
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showList(); }
+    });
   });
 
   // Hash routing
@@ -380,24 +378,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: false });
   })();
 
-  // Lightbox controls
-  function addTouch(el, fn) {
-    if (!el) return;
-    el.addEventListener('click', fn);
-    el.addEventListener('touchend', function(e) { e.preventDefault(); fn(e); }, { passive: false });
-  }
-  var lbEl = document.getElementById('lightbox');
-  if (lbEl) addTouch(lbEl, function(e) { if (e.target === lbEl) closeLightbox(); });
-  addTouch(document.getElementById('lbClose'), function(e) { e.stopPropagation(); closeLightbox(); });
-  addTouch(document.getElementById('lbPrev'), function(e) { e.stopPropagation(); lbNav(-1); });
-  addTouch(document.getElementById('lbNext'), function(e) { e.stopPropagation(); lbNav(1); });
-  document.addEventListener('keydown', function(e) {
-    var lb = document.getElementById('lightbox');
-    if (!lb || !lb.classList.contains('show')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') lbNav(-1);
-    if (e.key === 'ArrowRight') lbNav(1);
-  });
 
   // Admin sync: load edited PROJECTS from localStorage
   (function() {
@@ -526,16 +506,38 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 220);
     }
 
-    function showBubble() {
+    var bubbleVisible = false;
+    function updateBubblePos() {
       var r = wrap.getBoundingClientRect();
       bubble.style.left = (r.right - 14) + 'px';
       bubble.style.top = (r.top - 4) + 'px';
+    }
+    function showBubble() {
+      bubbleVisible = true;
+      updateBubblePos();
       bubble.style.opacity = '1';
       bubble.style.transform = 'scale(1) translate(0,0)';
       startHelloRotation();
     }
+    var _lastMobile = window.innerWidth <= 1280;
+    window.addEventListener('resize', function() {
+      var isMobile = window.innerWidth <= 1280;
+      // 브레이크포인트 전환 시 상태 초기화
+      if (isMobile !== _lastMobile) {
+        _lastMobile = isMobile;
+        if (bubbleVisible) {
+          hideBubble();
+          morphTo(path1);
+          avatarState = 1;
+        }
+        return;
+      }
+      if (!bubbleVisible) return;
+      requestAnimationFrame(updateBubblePos);
+    });
 
     function hideBubble() {
+      bubbleVisible = false;
       bubble.style.opacity = '0';
       bubble.style.transform = 'scale(.85) translate(4px,-4px)';
       stopHelloRotation();
