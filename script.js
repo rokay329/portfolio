@@ -6,7 +6,7 @@ var _sliderGo = null;
 
 // ── View navigation ────────────────────────────────────────
 function showList() {
-  document.getElementById('listView').style.display = '';
+document.getElementById('listView').style.display = '';
   document.getElementById('detailView').style.display = 'none';
   document.body.style.overflow = '';
   var fb = document.getElementById('dvFloatBack');
@@ -152,6 +152,7 @@ document.getElementById('dvOverview').textContent = p.desc || '';
   var scrollLine = document.getElementById('scrollLine');
   if (scrollLine) scrollLine.style.width = '0';
   try { window.location.hash = 'project-' + id; } catch(e) {}
+
 
   // Float back button (mobile)
   var fb = document.getElementById('dvFloatBack');
@@ -302,13 +303,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })();
 
-  // 모바일 스크롤 기반 카드 오버레이 (Intersection Observer)
+  // 모바일 스크롤 기반 카드 오버레이 (항상 하나만 활성화)
   if (window.innerWidth <= 1280) {
     var cardObserver = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
-        entry.target.classList.toggle('is-active', entry.isIntersecting);
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.gi.is-active').forEach(function(c) {
+            c.classList.remove('is-active');
+          });
+          entry.target.classList.add('is-active');
+        } else {
+          entry.target.classList.remove('is-active');
+        }
       });
-    }, { rootMargin: '-25% 0px -25% 0px', threshold: 0 });
+    }, { rootMargin: '-35% 0px -35% 0px', threshold: 0 });
 
     document.querySelectorAll('.gi[data-id]').forEach(function(card) {
       cardObserver.observe(card);
@@ -606,7 +614,7 @@ document.addEventListener('DOMContentLoaded', function() {
       cur.style.left = e.clientX + 'px';
       cur.style.top = e.clientY + 'px';
     });
-    document.querySelectorAll('a,button,.gi,.sidebar-logo,.dv-sticky-back,.avatar-wrap').forEach(function(el) {
+    document.querySelectorSelector('a,button,.gi,.sidebar-logo,.dv-sticky-back,.avatar-wrap').forEach(function(el) {
       el.addEventListener('mouseenter', function() { cur.classList.add('big'); });
       el.addEventListener('mouseleave', function() { cur.classList.remove('big'); });
     });

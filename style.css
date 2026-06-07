@@ -230,6 +230,7 @@
     #detailView{height:auto;overflow:visible;}
     .dv-slider{height:60vw;min-height:200px;}
     .dv-role-badge,.dv-info-val{font-size:clamp(1.6rem,6vw,2.4rem);font-weight:500;letter-spacing:-.04em;line-height:1.4;}
+    .dv-info-grid{grid-template-columns:1fr;gap:32px;}
     .cat-filter{font-size:2rem;}
     .cat-item{white-space:normal;}
     .dv-title{font-size:clamp(1.6rem,6vw,2.4rem);}
