@@ -379,19 +379,24 @@ document.addEventListener('DOMContentLoaded', function() {
   })();
 
 
-  // Admin sync: load edited PROJECTS from localStorage
+  // Supabase에서 PROJECTS 데이터 로드
   (function() {
-    try {
-      var saved = localStorage.getItem('ccrd_projects');
-      if (!saved) return;
-      var parsed = JSON.parse(saved);
-      if (!parsed || parsed.length < 13) return;
+    var SB_URL = 'https://xwfcbtzsbmxwplgjdmls.supabase.co';
+    var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3ZmNidHpzYm14d3BsZ2pkbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjA3MzQsImV4cCI6MjA5NjM5NjczNH0.7n3maOALEbjlVI_qjnGQj1dyKVus3yiM2fiKapDU88o';
+    fetch(SB_URL + '/rest/v1/projects?order=sort_order.asc', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (!data || !data.length) return;
       PROJECTS.length = 0;
-      parsed.forEach(function(p) { PROJECTS.push(p); });
-      // Update card thumbnails
+      data.forEach(function(r){
+        PROJECTS.push({ id: r.id, cat: r.cat, title: r.title, subtitle: r.subtitle, client: r.client, year: r.year, duration: r.duration, desc: r.description, tags: r.tags||[], has_ongoing: r.has_ongoing, role: r.role, roles: r.roles||[], tools: r.tools||[], images: r.images||[], thumbnail: r.thumbnail||'', platform: r.platform||'' });
+      });
+      // 카드 썸네일 업데이트
       document.querySelectorAll('.gi[data-id]').forEach(function(card) {
         var id = parseInt(card.getAttribute('data-id'));
-        var p = PROJECTS.find(function(x) { return x.id === id; });
+        var p = PROJECTS.find(function(x){ return x.id === id; });
         if (!p) return;
         var thumbSrc = p.thumbnail || (p.images && p.images[0]);
         if (!thumbSrc) return;
@@ -409,7 +414,8 @@ document.addEventListener('DOMContentLoaded', function() {
           existing.src = thumbSrc;
         }
       });
-    } catch(e) {}
+    })
+    .catch(function(e){ console.warn('Supabase load failed, using default data'); });
   })();
 
   // Unified scroll handler: progress bar + sticky header

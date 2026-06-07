@@ -91,10 +91,27 @@ body{font-family:'Poppins','Pretendard',sans-serif;background:var(--bg);color:va
 /* Toast */
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--txt);color:#fff;font-size:.72rem;font-weight:600;padding:10px 20px;border-radius:40px;opacity:0;transition:all .25s;pointer-events:none;z-index:9999;letter-spacing:.04em;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* ── Password Gate ── */
+.pw-gate{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;}
+.pw-box{display:flex;flex-direction:column;align-items:center;gap:16px;width:280px;}
+.pw-title{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.pw-input{width:100%;background:transparent;border:none;border-bottom:2px solid var(--txt);padding:10px 0;font-size:1rem;font-family:'Poppins','Pretendard',sans-serif;color:var(--txt);outline:none;text-align:center;letter-spacing:.2em;}
+.pw-input:focus{border-bottom-color:var(--accent);}
+.pw-btn{width:100%;padding:10px 20px;border-radius:40px;background:var(--txt);color:#fff;font-size:.72rem;font-weight:600;letter-spacing:.04em;font-family:'Poppins','Pretendard',sans-serif;border:2px solid var(--txt);cursor:pointer;transition:opacity .15s;text-transform:uppercase;margin-top:4px;}
+.pw-btn:hover{opacity:.8;}
+.pw-error{font-size:.65rem;color:var(--red);letter-spacing:.04em;height:16px;}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="pw-gate" id="pwGate">
+  <div class="pw-box">
+    <div class="pw-title">CCRD Admin</div>
+    <input class="pw-input" id="pwInput" type="password" placeholder="· · · · · ·" autocomplete="current-password"/>
+    <button class="pw-btn" id="pwBtn">Enter</button>
+    <div class="pw-error" id="pwError"></div>
+  </div>
+</div>
+<div class="app" id="appWrap" style="display:none;">
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-head">
@@ -245,7 +262,7 @@ body{font-family:'Poppins','Pretendard',sans-serif;background:var(--bg);color:va
 
     </div>
   </div>
-</div>
+</div><!-- /app -->
 
 <div class="toast" id="toast"></div>
 
@@ -260,28 +277,52 @@ var currentImages = [];
 var currentThumb = '';
 var isOngoing = false;
 
-function load() {
-  try {
-    var s = localStorage.getItem('ccrd_projects');
-    if (s) {
-      var saved = JSON.parse(s);
-      // Merge: add any DEFAULT projects missing from saved
-      DEFAULT_PROJECTS.forEach(function(def) {
-        var exists = saved.find(function(x){ return x.id === def.id; });
-        if (!exists) saved.push(def);
-      });
-      projects = saved;
-      save(); // persist merged result
-    } else {
-      projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
-    }
-  } catch(e) { projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); }); }
-  renderList();
+// ── Supabase ──────────────────────────────────────────────────────────────
+var SB_URL = 'https://xwfcbtzsbmxwplgjdmls.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3ZmNidHpzYm14d3BsZ2pkbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjA3MzQsImV4cCI6MjA5NjM5NjczNH0.7n3maOALEbjlVI_qjnGQj1dyKVus3yiM2fiKapDU88o';
+var SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+function rowToProject(r) {
+  return { id: r.id, cat: r.cat||'', title: r.title||'', subtitle: r.subtitle||'', client: r.client||'', year: r.year||'', duration: r.duration||'', desc: r.description||'', tags: r.tags||[], has_ongoing: !!r.has_ongoing, role: r.role||'', roles: r.roles||[], tools: r.tools||[], images: r.images||[], thumbnail: r.thumbnail||'', platform: r.platform||'' };
+}
+function projectToRow(p, idx) {
+  return { id: p.id, cat: p.cat||'', title: p.title||'', subtitle: p.subtitle||'', client: p.client||'', year: p.year||'', duration: p.duration||'', description: p.desc||'', tags: p.tags||[], has_ongoing: !!p.has_ongoing, role: p.role||'', roles: p.roles||[], tools: p.tools||[], images: p.images||[], thumbnail: p.thumbnail||'', platform: p.platform||'', sort_order: typeof idx==='number' ? idx : 0 };
 }
 
-function save() {
-  localStorage.setItem('ccrd_projects', JSON.stringify(projects));
-  localStorage.setItem('ccrd_projects_ts', Date.now());
+function load() {
+  showToast('불러오는 중...');
+  fetch(SB_URL + '/rest/v1/projects?order=sort_order.asc', { headers: SB_HEADERS })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if (data && data.length) {
+      projects = data.map(rowToProject);
+      renderList();
+    } else {
+      // 최초 실행: 기본 데이터 업로드
+      projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
+      var rows = projects.map(function(p, i){ return projectToRow(p, i); });
+      fetch(SB_URL + '/rest/v1/projects', {
+        method: 'POST',
+        headers: Object.assign({}, SB_HEADERS, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+        body: JSON.stringify(rows)
+      }).then(function(){ renderList(); showToast('초기 데이터 업로드 완료'); });
+    }
+  })
+  .catch(function(){
+    projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
+    renderList();
+    showToast('연결 실패 — 오프라인 모드');
+  });
+}
+
+function save() { /* Supabase로 대체됨 — saveToSupabase 사용 */ }
+
+function saveToSupabase(p, idx) {
+  return fetch(SB_URL + '/rest/v1/projects', {
+    method: 'POST',
+    headers: Object.assign({}, SB_HEADERS, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+    body: JSON.stringify(projectToRow(p, idx))
+  });
 }
 
 function showToast(msg) {
@@ -344,10 +385,10 @@ function openProject(id) {
 }
 
 function newProject() {
-  var newId = Date.now();
-  var p = { id: newId, cat: 'IoT & Smart Appliances Platform', title: '새 프로젝트', subtitle: '', client: '', year: '', duration: '', role: '', desc: '', tags: [], has_ongoing: false, images: [] };
+  var maxId = projects.reduce(function(m, p){ return Math.max(m, p.id); }, 100);
+  var newId = maxId + 1;
+  var p = { id: newId, cat: 'IoT & Smart Appliances Platform', title: '새 프로젝트', subtitle: '', client: '', year: '', duration: '', role: '', desc: '', tags: [], has_ongoing: false, images: [], roles: [], tools: [], thumbnail: '', platform: '' };
   projects.push(p);
-  save();
   renderList();
   openProject(newId);
   showToast('새 프로젝트 추가됨');
@@ -369,21 +410,26 @@ function saveProject() {
   projects[idx].tags = currentTags.slice();
   projects[idx].images = currentImages.slice();
   projects[idx].thumbnail = currentThumb;
-  save();
   renderList();
   document.getElementById('editorTitle').textContent = projects[idx].title || '제목 없음';
-  showToast('저장됨 ✓');
+  saveToSupabase(projects[idx], idx)
+  .then(function(r){ showToast(r.ok ? '저장됨 ✓' : '저장 실패'); })
+  .catch(function(){ showToast('저장 실패'); });
 }
 
 function deleteProject() {
   if (!confirm('이 프로젝트를 삭제할까요?')) return;
-  projects = projects.filter(function(x){ return x.id !== currentId; });
-  currentId = null;
-  save();
-  document.getElementById('emptyState').style.display = '';
-  document.getElementById('editor').style.display = 'none';
-  renderList();
-  showToast('삭제됨');
+  var idToDelete = currentId;
+  fetch(SB_URL + '/rest/v1/projects?id=eq.' + idToDelete, { method: 'DELETE', headers: SB_HEADERS })
+  .then(function(){
+    projects = projects.filter(function(x){ return x.id !== idToDelete; });
+    currentId = null;
+    document.getElementById('emptyState').style.display = '';
+    document.getElementById('editor').style.display = 'none';
+    renderList();
+    showToast('삭제됨');
+  })
+  .catch(function(){ showToast('삭제 실패'); });
 }
 
 // ── Ongoing Toggle ──────────────────────────────────────────────────────────
@@ -442,12 +488,31 @@ function renderThumb() {
     slot.onclick = function(){ document.getElementById('thumbUpload').click(); };
   }
 }
+// ── Cloudinary Upload ──────────────────────────────────────────────────────
+var CLOUDINARY_CLOUD = 'da1juju2p';
+var CLOUDINARY_PRESET = 'portfolio';
+
+function uploadToCloudinary(file, onSuccess) {
+  var formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_PRESET);
+  showToast('업로드 중...');
+  fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.secure_url) { onSuccess(data.secure_url); showToast('업로드 완료 ✓'); }
+    else { showToast('업로드 실패'); }
+  })
+  .catch(function() { showToast('업로드 실패'); });
+}
+
 function handleThumbUpload(e) {
   var file = e.target.files[0];
   if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev){ currentThumb = ev.target.result; renderThumb(); };
-  reader.readAsDataURL(file);
+  uploadToCloudinary(file, function(url) { currentThumb = url; renderThumb(); });
   e.target.value = '';
 }
 function renderImages() {
@@ -477,12 +542,10 @@ function handleImgUpload(e) {
   var files = Array.from(e.target.files);
   var remaining = 8 - currentImages.length;
   files.slice(0, remaining).forEach(function(file) {
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-      currentImages.push(ev.target.result);
+    uploadToCloudinary(file, function(url) {
+      currentImages.push(url);
       renderImages();
-    };
-    reader.readAsDataURL(file);
+    });
   });
   e.target.value = '';
 }
@@ -520,12 +583,49 @@ function previewSite() {
 }
 function resetToDefault() {
   if (!confirm('모든 변경사항을 초기화할까요?')) return;
-  localStorage.removeItem('ccrd_projects');
-  location.reload();
+  var rows = DEFAULT_PROJECTS.map(function(p, i){ return projectToRow(Object.assign({}, p), i); });
+  fetch(SB_URL + '/rest/v1/projects', {
+    method: 'POST',
+    headers: Object.assign({}, SB_HEADERS, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+    body: JSON.stringify(rows)
+  }).then(function(){ location.reload(); });
 }
 
+// ── Password Gate ─────────────────────────────────────────────────────────
+(function() {
+  var PW = '860329';
+  var gate = document.getElementById('pwGate');
+  var app = document.getElementById('appWrap');
+  var input = document.getElementById('pwInput');
+  var btn = document.getElementById('pwBtn');
+  var error = document.getElementById('pwError');
+
+  function unlock() {
+    if (input.value === PW) {
+      sessionStorage.setItem('ccrd_auth', '1');
+      gate.style.display = 'none';
+      app.style.display = 'flex';
+      load();
+    } else {
+      error.textContent = '비밀번호가 맞지 않습니다';
+      input.value = '';
+      input.focus();
+      setTimeout(function(){ error.textContent = ''; }, 2000);
+    }
+  }
+
+  if (sessionStorage.getItem('ccrd_auth') === '1') {
+    gate.style.display = 'none';
+    app.style.display = 'flex';
+    load();
+  } else {
+    input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+    btn.addEventListener('click', unlock);
+    input.focus();
+  }
+})();
+
 // ── Init ──────────────────────────────────────────────────────────────────
-load();
 </script>
 </body>
 </html>
