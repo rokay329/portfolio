@@ -614,7 +614,7 @@ document.addEventListener('DOMContentLoaded', function() {
       cur.style.left = e.clientX + 'px';
       cur.style.top = e.clientY + 'px';
     });
-    document.querySelectorSelector('a,button,.gi,.sidebar-logo,.dv-sticky-back,.avatar-wrap').forEach(function(el) {
+    document.querySelectorAll('a,button,.gi,.sidebar-logo,.dv-sticky-back,.avatar-wrap').forEach(function(el) {
       el.addEventListener('mouseenter', function() { cur.classList.add('big'); });
       el.addEventListener('mouseleave', function() { cur.classList.remove('big'); });
     });
