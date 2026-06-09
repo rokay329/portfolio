@@ -6,13 +6,18 @@ var _sliderGo = null;
 
 // ── View navigation ────────────────────────────────────────
 function showList() {
-document.getElementById('listView').style.display = '';
+  document.getElementById('listView').style.display = '';
   document.getElementById('detailView').style.display = 'none';
   document.body.style.overflow = '';
   var fb = document.getElementById('dvFloatBack');
   if (fb) fb.classList.remove('show');
   var sticky = document.getElementById('dvSticky');
   if (sticky) sticky.classList.remove('show');
+  // 카테고리 필터 All로 초기화
+  document.querySelectorAll('.cat-item').forEach(function(ci) {
+    ci.classList.toggle('active', ci.getAttribute('data-cat') === 'all');
+  });
+  document.querySelectorAll('.gi[data-id]').forEach(function(card) { card.style.display = ''; });
   try { window.location.hash = 'works'; } catch(e) {}
 }
 

@@ -152,9 +152,9 @@
 
   /* Project nav */
   .dv-nav{display:flex;justify-content:space-between;align-items:center;padding:1.75rem 2.5rem;border-top:1px solid var(--bd);flex-shrink:0;}
-  .dv-nav-btn{cursor:pointer;background:none;border:none;padding:0;opacity:.4;transition:opacity .15s;}
+  .dv-nav-btn{cursor:pointer;background:none;border:none;padding:0;opacity:.35;transition:opacity .15s;font-size:.72rem;font-weight:600;letter-spacing:.12em;font-family:'Poppins','Pretendard',sans-serif;color:var(--txt);}
   .dv-nav-btn:hover{opacity:1;}
-  .dv-nav-btn[style*="hidden"]{opacity:.15;pointer-events:none;}
+  .dv-nav-btn[style*="hidden"]{opacity:.1;pointer-events:none;}
 
   .dv-back-btn{background:none;border:none;cursor:none;padding:0;margin-bottom:1.5rem;display:block;align-self:flex-start;}
   .dv-back-btn:hover img{transform:translateX(-6px);}
