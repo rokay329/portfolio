@@ -83,6 +83,7 @@ document.getElementById('dvOverview').textContent = p.desc || '';
   var track = document.getElementById('dvSliderTrack');
   var thumb = document.getElementById('dvSliderThumb');
   var slideCount = document.getElementById('dvSlideCount');
+  var scrubber = document.getElementById('dvSliderScrubber');
   var colImgsEl = document.getElementById('dvColImgs');
   if (track) track.innerHTML = '';
 
@@ -94,13 +95,13 @@ document.getElementById('dvOverview').textContent = p.desc || '';
   function sliderRender() {
     if (!track) return;
     track.style.transform = 'translateX(-' + (sliderIdx * 100) + '%)';
-    if (thumb && imgs.length) {
-      var pct = 100 / imgs.length;
-      thumb.style.width = pct + '%';
-      thumb.style.marginLeft = (sliderIdx * pct) + '%';
-    }
-    if (slideCount && imgs.length > 1) {
-      slideCount.textContent = pad(sliderIdx + 1) + ' / ' + pad(imgs.length);
+    if (imgs.length > 1) {
+      if (thumb) {
+        var pct = 100 / imgs.length;
+        thumb.style.width = pct + '%';
+        thumb.style.marginLeft = (sliderIdx * pct) + '%';
+      }
+      if (slideCount) slideCount.textContent = pad(sliderIdx + 1) + ' / ' + pad(imgs.length);
     }
   }
 
@@ -114,6 +115,8 @@ document.getElementById('dvOverview').textContent = p.desc || '';
 
   if (!imgs.length) {
     if (colImgsEl) colImgsEl.style.display = 'none';
+    if (slideCount) slideCount.textContent = '';
+    if (scrubber) scrubber.style.display = 'none';
   } else {
     if (colImgsEl) colImgsEl.style.display = '';
     imgs.forEach(function(src) {
@@ -125,13 +128,13 @@ document.getElementById('dvOverview').textContent = p.desc || '';
       track.appendChild(im);
     });
     if (track) track.style.transform = 'translateX(0%)';
-    if (thumb) {
+    var multiImg = imgs.length > 1;
+    if (scrubber) scrubber.style.display = multiImg ? '' : 'none';
+    if (slideCount) slideCount.textContent = multiImg ? '01 / ' + pad(imgs.length) : '';
+    if (thumb && multiImg) {
       var pct = 100 / imgs.length;
       thumb.style.width = pct + '%';
       thumb.style.marginLeft = '0%';
-    }
-    if (slideCount && imgs.length > 1) {
-      slideCount.textContent = '01 / ' + pad(imgs.length);
     }
   }
 
