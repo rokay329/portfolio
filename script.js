@@ -3,6 +3,7 @@ const PROJECTS = [{"id": 0, "cat": "IoT & Smart Appliances Platform", "title": "
 
 // ── Module state ───────────────────────────────────────────
 var _sliderGo = null;
+var _activeCat = 'all';
 
 // ── View navigation ────────────────────────────────────────
 function showList() {
@@ -13,11 +14,22 @@ function showList() {
   if (fb) fb.classList.remove('show');
   var sticky = document.getElementById('dvSticky');
   if (sticky) sticky.classList.remove('show');
-  // 카테고리 필터 All로 초기화
+  // scrollLine 리셋
+  var scrollLine = document.getElementById('scrollLine');
+  if (scrollLine) scrollLine.style.width = '0';
+  // 카테고리 필터 상태 복원
   document.querySelectorAll('.cat-item').forEach(function(ci) {
-    ci.classList.toggle('active', ci.getAttribute('data-cat') === 'all');
+    ci.classList.toggle('active', ci.getAttribute('data-cat') === _activeCat);
   });
-  document.querySelectorAll('.gi[data-id]').forEach(function(card) { card.style.display = ''; });
+  document.querySelectorAll('.gi[data-id]').forEach(function(card) {
+    if (_activeCat === 'all') {
+      card.style.display = '';
+    } else {
+      var cid = parseInt(card.getAttribute('data-id'));
+      var cp = PROJECTS.find(function(x) { return x.id === cid; });
+      card.style.display = (cp && cp.cat === _activeCat) ? '' : 'none';
+    }
+  });
   try { window.location.hash = 'works'; } catch(e) {}
 }
 
@@ -42,7 +54,13 @@ document.getElementById('dvOverview').textContent = p.desc || '';
 
   document.getElementById('dvYear').textContent = p.duration || '';
   document.getElementById('dvDuration').textContent = p.client || '';
-  document.getElementById('dvPlatform').textContent = p.platform || '';
+  var platformVal = p.platform || '';
+  var platformEl = document.getElementById('dvPlatform');
+  if (platformEl) {
+    platformEl.textContent = platformVal;
+    var platformRow = platformEl.closest('.dv-info-cell');
+    if (platformRow) platformRow.style.display = platformVal ? '' : 'none';
+  }
 
   // Tools
   var TOOL_ICONS = {
@@ -207,6 +225,8 @@ function sendContact() {
   var email = document.getElementById('cEmail').value.trim();
   var msg = document.getElementById('cMsg').value.trim();
   if (!name || !email || !msg) { alert('Please fill in all fields.'); return; }
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRe.test(email)) { alert('Please enter a valid email address.'); return; }
   window.location.href = 'mailto:zzoddo329@gmail.com?subject=Portfolio Inquiry from ' +
     encodeURIComponent(name) + '&body=' + encodeURIComponent(msg + '\n\nFrom: ' + email);
 }
@@ -246,16 +266,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
   })();
 
-  // Card placeholder colors
-  var palette = [
-    'hsl(30,12%,91%)', 'hsl(200,12%,90%)', 'hsl(140,9%,90%)', 'hsl(350,12%,91%)',
-    'hsl(270,9%,91%)', 'hsl(55,13%,91%)', 'hsl(170,10%,90%)', 'hsl(15,13%,91%)'
-  ];
+  // Card colors from project data (thumb_c1 / thumb_c2)
   document.querySelectorAll('.gi[data-id]').forEach(function(card) {
     var thumb = card.querySelector('.gi-thumb');
     if (thumb && !thumb.querySelector('img.gi-thumb-bg')) {
-      var idx = parseInt(card.getAttribute('data-id')) % palette.length;
-      thumb.style.background = palette[idx];
+      var cid = parseInt(card.getAttribute('data-id'));
+      var cp = PROJECTS.find(function(x) { return x.id === cid; });
+      if (cp && cp.thumb_c1 && cp.thumb_c2) {
+        thumb.style.background = 'linear-gradient(135deg,' + cp.thumb_c1 + ' 0%,' + cp.thumb_c2 + ' 100%)';
+      }
     }
   });
 
@@ -297,6 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var item = e.target.closest('.cat-item');
       if (!item) return;
       var selectedCat = item.getAttribute('data-cat');
+      _activeCat = selectedCat;
       document.querySelectorAll('.cat-item').forEach(function(ci) { ci.classList.remove('active'); });
       item.classList.add('active');
       document.querySelectorAll('.gi[data-id]').forEach(function(card) {
@@ -369,43 +389,6 @@ document.addEventListener('DOMContentLoaded', function() {
     else showList();
   });
 
-  // Slider: drag / touch / wheel — registered once
-  (function() {
-    var sliderEl = document.getElementById('dvSlider');
-    if (!sliderEl) return;
-    var startX = 0, dragging = false;
-
-    sliderEl.addEventListener('mousedown', function(e) {
-      startX = e.clientX;
-      dragging = true;
-      e.preventDefault();
-    });
-    sliderEl.addEventListener('mouseup', function(e) {
-      if (!dragging) return;
-      dragging = false;
-      var d = e.clientX - startX;
-      if (Math.abs(d) > 40 && _sliderGo) _sliderGo(d < 0 ? 1 : -1);
-    });
-    sliderEl.addEventListener('mouseleave', function(e) {
-      if (!dragging) return;
-      dragging = false;
-      var d = e.clientX - startX;
-      if (Math.abs(d) > 40 && _sliderGo) _sliderGo(d < 0 ? 1 : -1);
-    });
-    sliderEl.addEventListener('touchstart', function(e) {
-      startX = e.touches[0].clientX;
-    }, { passive: true });
-    sliderEl.addEventListener('touchend', function(e) {
-      var d = e.changedTouches[0].clientX - startX;
-      if (Math.abs(d) > 40 && _sliderGo) _sliderGo(d < 0 ? 1 : -1);
-    }, { passive: true });
-    sliderEl.addEventListener('wheel', function(e) {
-      e.preventDefault();
-      if (!_sliderGo) return;
-      if (e.deltaY > 0 || e.deltaX > 0) _sliderGo(1);
-      else _sliderGo(-1);
-    }, { passive: false });
-  })();
 
 
   // Supabase에서 PROJECTS 데이터 로드
@@ -449,18 +432,68 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Unified scroll handler: progress bar + sticky header
   window.addEventListener('scroll', function() {
+    var listView = document.getElementById('listView');
+    var inDetail = listView && listView.style.display === 'none';
     var scrollLine = document.getElementById('scrollLine');
-    if (scrollLine) {
+    if (scrollLine && inDetail) {
       var s = document.documentElement.scrollTop;
       var h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       scrollLine.style.width = (h > 0 ? s / h * 100 : 0) + '%';
     }
     var sticky = document.getElementById('dvSticky');
-    var listView = document.getElementById('listView');
-    if (sticky && listView && listView.style.display === 'none') {
+    if (sticky && inDetail) {
       sticky.classList.toggle('show', window.scrollY > 80);
     }
   });
+
+  // Slider: drag / touch / wheel — registered once
+  (function() {
+    var sliderEl = document.getElementById('dvSlider');
+    if (!sliderEl) return;
+    var startX = 0, dragging = false;
+
+    sliderEl.addEventListener('mousedown', function(e) {
+      startX = e.clientX;
+      dragging = true;
+      e.preventDefault();
+    });
+    sliderEl.addEventListener('mouseup', function(e) {
+      if (!dragging) return;
+      dragging = false;
+      var d = e.clientX - startX;
+      if (Math.abs(d) > 40 && _sliderGo) _sliderGo(d < 0 ? 1 : -1);
+    });
+    sliderEl.addEventListener('mouseleave', function(e) {
+      if (!dragging) return;
+      dragging = false;
+      var d = e.clientX - startX;
+      if (Math.abs(d) > 40 && _sliderGo) _sliderGo(d < 0 ? 1 : -1);
+    });
+    sliderEl.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+    sliderEl.addEventListener('touchend', function(e) {
+      var d = e.changedTouches[0].clientX - startX;
+      if (Math.abs(d) > 40 && _sliderGo) _sliderGo(d < 0 ? 1 : -1);
+    }, { passive: true });
+    sliderEl.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      if (!_sliderGo) return;
+      if (e.deltaY > 0 || e.deltaX > 0) _sliderGo(1);
+      else _sliderGo(-1);
+    }, { passive: false });
+  })();
+
+  // Contact send
+  var btnSend = document.getElementById('btnSend');
+  if (btnSend) btnSend.addEventListener('click', sendContact);
+
+  // Slider prev / next buttons
+  var sliderPrev = document.getElementById('dvSliderPrev');
+  var sliderNext = document.getElementById('dvSliderNext');
+  if (sliderPrev) sliderPrev.addEventListener('click', function() { if (_sliderGo) _sliderGo(-1); });
+  if (sliderNext) sliderNext.addEventListener('click', function() { if (_sliderGo) _sliderGo(1); });
+
 
   // Image column scroll (desktop — updates progress bar when images scroll)
   var dvColImgs = document.getElementById('dvColImgs');

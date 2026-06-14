@@ -220,9 +220,13 @@
       <!-- Right: single image slider -->
       <div class="dv-col-imgs" id="dvColImgs">
         <div class="dv-slide-count" id="dvSlideCount"></div>
-        <div class="dv-slider" id="dvSlider">
-          <div class="dv-slider-track" id="dvSliderTrack"></div>
-          <div class="dv-slider-scrubber" id="dvSliderScrubber"><div class="dv-slider-scrubber-thumb" id="dvSliderThumb"></div></div>
+        <div style="position:relative;height:100%;">
+          <button id="dvSliderPrev" aria-label="이전 이미지" style="position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:10;background:rgba(0,0,0,0.35);color:#fff;border:none;width:36px;height:52px;cursor:pointer;font-size:1.4rem;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:center;">&#8249;</button>
+          <div class="dv-slider" id="dvSlider">
+            <div class="dv-slider-track" id="dvSliderTrack"></div>
+            <div class="dv-slider-scrubber" id="dvSliderScrubber"><div class="dv-slider-scrubber-thumb" id="dvSliderThumb"></div></div>
+          </div>
+          <button id="dvSliderNext" aria-label="다음 이미지" style="position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:10;background:rgba(0,0,0,0.35);color:#fff;border:none;width:36px;height:52px;cursor:pointer;font-size:1.4rem;border-radius:4px 0 0 4px;display:flex;align-items:center;justify-content:center;">&#8250;</button>
         </div>
       </div>
     </div>
