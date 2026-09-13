@@ -103,15 +103,7 @@ body{font-family:'Poppins','Pretendard',sans-serif;background:var(--bg);color:va
 </style>
 </head>
 <body>
-<div class="pw-gate" id="pwGate">
-  <div class="pw-box">
-    <div class="pw-title">CCRD Admin</div>
-    <input class="pw-input" id="pwInput" type="password" placeholder="· · · · · ·" autocomplete="current-password"/>
-    <button class="pw-btn" id="pwBtn">Enter</button>
-    <div class="pw-error" id="pwError"></div>
-  </div>
-</div>
-<div class="app" id="appWrap" style="display:none;">
+<div class="app" id="appWrap">
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-head">
@@ -591,39 +583,9 @@ function resetToDefault() {
   }).then(function(){ location.reload(); });
 }
 
-// ── Password Gate ─────────────────────────────────────────────────────────
-(function() {
-  var PW = '860329';
-  var gate = document.getElementById('pwGate');
-  var app = document.getElementById('appWrap');
-  var input = document.getElementById('pwInput');
-  var btn = document.getElementById('pwBtn');
-  var error = document.getElementById('pwError');
-
-  function unlock() {
-    if (input.value === PW) {
-      sessionStorage.setItem('ccrd_auth', '1');
-      gate.style.display = 'none';
-      app.style.display = 'flex';
-      load();
-    } else {
-      error.textContent = '비밀번호가 맞지 않습니다';
-      input.value = '';
-      input.focus();
-      setTimeout(function(){ error.textContent = ''; }, 2000);
-    }
-  }
-
-  if (sessionStorage.getItem('ccrd_auth') === '1') {
-    gate.style.display = 'none';
-    app.style.display = 'flex';
-    load();
-  } else {
-    input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
-    btn.addEventListener('click', unlock);
-    input.focus();
-  }
-})();
+// ── Auth ───────────────────────────────────────────────────────────────────
+// 비밀번호 게이트 제거됨 — 이 페이지 접근 자체가 Cloudflare Access로 보호되고 있음
+load();
 
 // ── Init ──────────────────────────────────────────────────────────────────
 </script>
