@@ -1,0 +1,11 @@
+{
+  // 이 파일이 있으면 Cloudflare가 이 레포를 "Workers (정적 자산 포함)" 프로젝트로
+  // 빌드/배포한다. worker/index.js가 /api/save를 처리하고, 나머지는 정적 파일로 서빙한다.
+  "name": "portfolio-admin",
+  "compatibility_date": "2026-10-01",
+  "main": "worker/index.js",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  }
+}
