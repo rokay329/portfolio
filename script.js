@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // data/projects.json에서 PROJECTS 데이터 로드 (GitHub 레포가 곧 DB)
   (function() {
-    fetch('/data/projects.json', { cache: 'no-store' })
+    fetch('data/projects.json', { cache: 'no-store' })
     .then(function(r){ if(!r.ok) throw new Error('not found'); return r.json(); })
     .then(function(data){
       if (!data || !data.length) return;

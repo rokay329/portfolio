@@ -109,7 +109,9 @@ async function handleSavePost(request, env) {
       const safeName = String(name).replace(/[^a-zA-Z0-9._-]/g, '_');
       const path = `images/${Date.now()}-${safeName}`;
       await putFile(path, token, dataBase64, `Upload image ${safeName}`);
-      return json({ ok: true, url: '/' + path });
+      // 앞에 슬래시를 안 붙인 상대경로로 반환 — GitHub Pages가 /portfolio/ 같은
+      // 하위 경로에서 서빙되므로, 절대경로(/images/...)는 그 경우 루트로 잘못 풀린다.
+      return json({ ok: true, url: path });
     }
 
     return json({ error: '알 수 없는 type' }, 400);
