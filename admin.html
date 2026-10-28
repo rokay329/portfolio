@@ -269,6 +269,10 @@ var currentId = null;
 var currentTags = [];
 var currentImages = [];
 var currentThumb = '';
+// 업로드 직후 Cloudflare 재배포 전까지는 실제 경로(/images/...)가 아직 404임.
+// 그동안 화면에선 방금 읽은 로컬 파일(base64)을 그대로 보여줘서 "바로 안 보이는" 문제를 없앤다.
+// 실제 저장되는 값은 항상 영구 경로(url)이고, 이건 표시용 캐시일 뿐이다.
+var localPreviewCache = {};
 var isOngoing = false;
 
 // ── 저장 방식: GitHub 레포가 DB (Cloudflare Pages Function 경유) ────────────
@@ -485,7 +489,7 @@ function renderThumb() {
   slot.innerHTML = '';
   if(currentThumb){
     var img = document.createElement('img');
-    img.src = currentThumb;
+    img.src = localPreviewCache[currentThumb] || currentThumb;
     slot.appendChild(img);
     var rm = document.createElement('button');
     rm.className = 'rm-img';
@@ -505,7 +509,8 @@ function uploadToGitHub(file, onSuccess) {
   showToast('업로드 중...');
   var reader = new FileReader();
   reader.onload = function() {
-    var base64 = String(reader.result).split(',')[1];
+    var dataUrl = String(reader.result);
+    var base64 = dataUrl.split(',')[1];
     fetch('/api/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -513,7 +518,13 @@ function uploadToGitHub(file, onSuccess) {
     })
     .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
     .then(function(res){
-      if (res.ok && res.j.url) { onSuccess(res.j.url); showToast('업로드 완료 ✓'); }
+      if (res.ok && res.j.url) {
+        // Cloudflare가 이 커밋으로 재배포를 끝내기 전까지는 res.j.url이 아직 404라서,
+        // 그동안은 방금 읽은 로컬 데이터(dataUrl)로 화면에 보여준다.
+        localPreviewCache[res.j.url] = dataUrl;
+        onSuccess(res.j.url);
+        showToast('업로드 완료 ✓ (사이트 반영까지 약 30초)');
+      }
       else { showToast('업로드 실패: ' + (res.j.error || '')); }
     })
     .catch(function(){ showToast('업로드 실패'); });
@@ -537,7 +548,7 @@ function renderImages() {
     slot.className = 'img-slot';
     if (currentImages[i]) {
       var img = document.createElement('img');
-      img.src = currentImages[i];
+      img.src = localPreviewCache[currentImages[i]] || currentImages[i];
       slot.appendChild(img);
       var rm = document.createElement('button');
       rm.className = 'rm-img';
