@@ -115,6 +115,8 @@ body{font-family:'Poppins','Pretendard',sans-serif;background:var(--bg);color:va
       <button class="btn btn-outline btn-sm" onclick="previewSite()">미리보기</button>
       <button class="btn btn-sm btn-accent" onclick="exportHTML()">내보내기</button>
       <button class="btn btn-outline btn-sm" onclick="resetToDefault()">초기화</button>
+      <!-- 마이그레이션 완료 후 이 버튼은 지워도 됨 -->
+      <button class="btn btn-outline btn-sm" onclick="importFromSupabase()" title="Supabase에 남은 최신 데이터를 1회성으로 가져옴 (저장을 눌러야 GitHub에 반영됨)">Supabase 가져오기</button>
     </div>
     <div class="project-list" id="projectList"></div>
   </div>
@@ -269,51 +271,61 @@ var currentImages = [];
 var currentThumb = '';
 var isOngoing = false;
 
-// ── Supabase ──────────────────────────────────────────────────────────────
-var SB_URL = 'https://xwfcbtzsbmxwplgjdmls.supabase.co';
-var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3ZmNidHpzYm14d3BsZ2pkbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjA3MzQsImV4cCI6MjA5NjM5NjczNH0.7n3maOALEbjlVI_qjnGQj1dyKVus3yiM2fiKapDU88o';
-var SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+// ── 저장 방식: GitHub 레포가 DB (Cloudflare Pages Function 경유) ────────────
+// 이제 admin.html은 Supabase 대신 /api/save (functions/api/save.js)를 호출한다.
+// 그 함수가 Cloudflare Access 인증을 확인하고, GitHub Contents API로 data/projects.json에
+// 직접 커밋한다. GitHub 토큰은 서버(Pages Function) 쪽에만 있고 브라우저엔 노출되지 않는다.
+//
+// Supabase에서 아직 쓰던 데이터를 1회성으로 가져오려면 importFromSupabase()를 쓴다
+// (레거시 마이그레이션 전용 — 평상시 저장/삭제는 전부 persistAll()을 거친다).
+var LEGACY_SB_URL = 'https://xwfcbtzsbmxwplgjdmls.supabase.co';
+var LEGACY_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3ZmNidHpzYm14d3BsZ2pkbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjA3MzQsImV4cCI6MjA5NjM5NjczNH0.7n3maOALEbjlVI_qjnGQj1dyKVus3yiM2fiKapDU88o';
 
 function rowToProject(r) {
   return { id: r.id, cat: r.cat||'', title: r.title||'', subtitle: r.subtitle||'', client: r.client||'', year: r.year||'', duration: r.duration||'', desc: r.description||'', tags: r.tags||[], has_ongoing: !!r.has_ongoing, role: r.role||'', roles: r.roles||[], tools: r.tools||[], images: r.images||[], thumbnail: r.thumbnail||'', platform: r.platform||'' };
 }
-function projectToRow(p, idx) {
-  return { id: p.id, cat: p.cat||'', title: p.title||'', subtitle: p.subtitle||'', client: p.client||'', year: p.year||'', duration: p.duration||'', description: p.desc||'', tags: p.tags||[], has_ongoing: !!p.has_ongoing, role: p.role||'', roles: p.roles||[], tools: p.tools||[], images: p.images||[], thumbnail: p.thumbnail||'', platform: p.platform||'', sort_order: typeof idx==='number' ? idx : 0 };
-}
 
 function load() {
   showToast('불러오는 중...');
-  fetch(SB_URL + '/rest/v1/projects?order=sort_order.asc', { headers: SB_HEADERS })
+  fetch('/data/projects.json', { cache: 'no-store' })
+  .then(function(r){ if(!r.ok) throw new Error('not found'); return r.json(); })
+  .then(function(data){
+    projects = (data && data.length) ? data : DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
+    renderList();
+  })
+  .catch(function(){
+    projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
+    renderList();
+    showToast('data/projects.json을 찾을 수 없어 기본 데이터로 시작합니다');
+  });
+}
+
+// 1회성 마이그레이션: Supabase에 남아있는 최신 데이터를 가져와 화면에 채운다.
+// 이후 "전체 저장"을 눌러야 실제로 GitHub(data/projects.json)에 반영된다.
+function importFromSupabase() {
+  showToast('Supabase에서 가져오는 중...');
+  fetch(LEGACY_SB_URL + '/rest/v1/projects?order=sort_order.asc', {
+    headers: { 'apikey': LEGACY_SB_KEY, 'Authorization': 'Bearer ' + LEGACY_SB_KEY }
+  })
   .then(function(r){ return r.json(); })
   .then(function(data){
     if (data && data.length) {
       projects = data.map(rowToProject);
       renderList();
+      showToast('Supabase에서 ' + data.length + '개 프로젝트를 가져왔습니다 — 저장을 눌러 GitHub에 반영하세요');
     } else {
-      // 최초 실행: 기본 데이터 업로드
-      projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
-      var rows = projects.map(function(p, i){ return projectToRow(p, i); });
-      fetch(SB_URL + '/rest/v1/projects', {
-        method: 'POST',
-        headers: Object.assign({}, SB_HEADERS, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-        body: JSON.stringify(rows)
-      }).then(function(){ renderList(); showToast('초기 데이터 업로드 완료'); });
+      showToast('Supabase에 데이터가 없습니다 (프로젝트가 Paused 상태일 수 있음)');
     }
   })
-  .catch(function(){
-    projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
-    renderList();
-    showToast('연결 실패 — 오프라인 모드');
-  });
+  .catch(function(){ showToast('Supabase 연결 실패 — 프로젝트가 Paused 상태인지 확인하세요'); });
 }
 
-function save() { /* Supabase로 대체됨 — saveToSupabase 사용 */ }
-
-function saveToSupabase(p, idx) {
-  return fetch(SB_URL + '/rest/v1/projects', {
+// 전체 프로젝트 배열을 통째로 GitHub(data/projects.json)에 커밋한다.
+function persistAll() {
+  return fetch('/api/save', {
     method: 'POST',
-    headers: Object.assign({}, SB_HEADERS, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-    body: JSON.stringify(projectToRow(p, idx))
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'projects', projects: projects })
   });
 }
 
@@ -404,17 +416,22 @@ function saveProject() {
   projects[idx].thumbnail = currentThumb;
   renderList();
   document.getElementById('editorTitle').textContent = projects[idx].title || '제목 없음';
-  saveToSupabase(projects[idx], idx)
-  .then(function(r){ showToast(r.ok ? '저장됨 ✓' : '저장 실패'); })
+  showToast('저장 중...');
+  persistAll()
+  .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+  .then(function(res){ showToast(res.ok ? '저장됨 ✓' : ('저장 실패: ' + (res.j.error || ''))); })
   .catch(function(){ showToast('저장 실패'); });
 }
 
 function deleteProject() {
   if (!confirm('이 프로젝트를 삭제할까요?')) return;
   var idToDelete = currentId;
-  fetch(SB_URL + '/rest/v1/projects?id=eq.' + idToDelete, { method: 'DELETE', headers: SB_HEADERS })
-  .then(function(){
-    projects = projects.filter(function(x){ return x.id !== idToDelete; });
+  var backup = projects.slice();
+  projects = projects.filter(function(x){ return x.id !== idToDelete; });
+  showToast('삭제 중...');
+  persistAll()
+  .then(function(r){
+    if (!r.ok) { projects = backup; showToast('삭제 반영 실패'); renderList(); return; }
     currentId = null;
     document.getElementById('emptyState').style.display = '';
     document.getElementById('editor').style.display = 'none';
@@ -480,31 +497,35 @@ function renderThumb() {
     slot.onclick = function(){ document.getElementById('thumbUpload').click(); };
   }
 }
-// ── Cloudinary Upload ──────────────────────────────────────────────────────
-var CLOUDINARY_CLOUD = 'da1juju2p';
-var CLOUDINARY_PRESET = 'portfolio';
-
-function uploadToCloudinary(file, onSuccess) {
-  var formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', CLOUDINARY_PRESET);
+// ── 이미지 업로드: GitHub 레포에 직접 커밋 (Cloudinary 제거) ────────────────
+// 파일을 base64로 읽어 /api/save에 전달 → Pages Function이 images/ 폴더에 커밋하고
+// 레포 내 상대 경로(/images/...)를 돌려준다. 업로드 전 사이트 표시 해상도(약 1200~1600px)에
+// 맞춰 최적화해서 올릴 것 — 레포 용량을 작게 유지하기 위함.
+function uploadToGitHub(file, onSuccess) {
   showToast('업로드 중...');
-  fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', {
-    method: 'POST',
-    body: formData
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (data.secure_url) { onSuccess(data.secure_url); showToast('업로드 완료 ✓'); }
-    else { showToast('업로드 실패'); }
-  })
-  .catch(function() { showToast('업로드 실패'); });
+  var reader = new FileReader();
+  reader.onload = function() {
+    var base64 = String(reader.result).split(',')[1];
+    fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'image', name: file.name, dataBase64: base64 })
+    })
+    .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+    .then(function(res){
+      if (res.ok && res.j.url) { onSuccess(res.j.url); showToast('업로드 완료 ✓'); }
+      else { showToast('업로드 실패: ' + (res.j.error || '')); }
+    })
+    .catch(function(){ showToast('업로드 실패'); });
+  };
+  reader.onerror = function(){ showToast('파일을 읽을 수 없음'); };
+  reader.readAsDataURL(file);
 }
 
 function handleThumbUpload(e) {
   var file = e.target.files[0];
   if(!file) return;
-  uploadToCloudinary(file, function(url) { currentThumb = url; renderThumb(); });
+  uploadToGitHub(file, function(url) { currentThumb = url; renderThumb(); });
   e.target.value = '';
 }
 function renderImages() {
@@ -534,7 +555,7 @@ function handleImgUpload(e) {
   var files = Array.from(e.target.files);
   var remaining = 8 - currentImages.length;
   files.slice(0, remaining).forEach(function(file) {
-    uploadToCloudinary(file, function(url) {
+    uploadToGitHub(file, function(url) {
       currentImages.push(url);
       renderImages();
     });
@@ -575,12 +596,9 @@ function previewSite() {
 }
 function resetToDefault() {
   if (!confirm('모든 변경사항을 초기화할까요?')) return;
-  var rows = DEFAULT_PROJECTS.map(function(p, i){ return projectToRow(Object.assign({}, p), i); });
-  fetch(SB_URL + '/rest/v1/projects', {
-    method: 'POST',
-    headers: Object.assign({}, SB_HEADERS, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-    body: JSON.stringify(rows)
-  }).then(function(){ location.reload(); });
+  projects = DEFAULT_PROJECTS.map(function(p){ return Object.assign({}, p); });
+  showToast('초기화 중...');
+  persistAll().then(function(){ location.reload(); });
 }
 
 // ── Auth ───────────────────────────────────────────────────────────────────

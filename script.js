@@ -391,19 +391,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-  // Supabase에서 PROJECTS 데이터 로드
+  // data/projects.json에서 PROJECTS 데이터 로드 (GitHub 레포가 곧 DB)
   (function() {
-    var SB_URL = 'https://xwfcbtzsbmxwplgjdmls.supabase.co';
-    var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3ZmNidHpzYm14d3BsZ2pkbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjA3MzQsImV4cCI6MjA5NjM5NjczNH0.7n3maOALEbjlVI_qjnGQj1dyKVus3yiM2fiKapDU88o';
-    fetch(SB_URL + '/rest/v1/projects?order=sort_order.asc', {
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-    })
-    .then(function(r){ return r.json(); })
+    fetch('/data/projects.json', { cache: 'no-store' })
+    .then(function(r){ if(!r.ok) throw new Error('not found'); return r.json(); })
     .then(function(data){
       if (!data || !data.length) return;
       PROJECTS.length = 0;
       data.forEach(function(r){
-        PROJECTS.push({ id: r.id, cat: r.cat, title: r.title, subtitle: r.subtitle, client: r.client, year: r.year, duration: r.duration, desc: r.description, tags: r.tags||[], has_ongoing: r.has_ongoing, role: r.role, roles: r.roles||[], tools: r.tools||[], images: r.images||[], thumbnail: r.thumbnail||'', platform: r.platform||'' });
+        PROJECTS.push({ id: r.id, cat: r.cat, title: r.title, subtitle: r.subtitle, client: r.client, year: r.year, duration: r.duration, desc: r.desc, tags: r.tags||[], has_ongoing: r.has_ongoing, role: r.role, roles: r.roles||[], tools: r.tools||[], images: r.images||[], thumbnail: r.thumbnail||'', platform: r.platform||'' });
       });
       // 카드 썸네일 업데이트
       document.querySelectorAll('.gi[data-id]').forEach(function(card) {
@@ -427,7 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     })
-    .catch(function(e){ console.warn('Supabase load failed, using default data'); });
+    .catch(function(e){ console.warn('data/projects.json 로드 실패, 하드코딩된 기본 데이터로 표시'); });
   })();
 
   // Unified scroll handler: progress bar + sticky header
