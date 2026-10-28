@@ -16,10 +16,14 @@
     "has_ongoing": true,
     "role": "Lead UX Designer — 전체 UX 전략 수립, 사용자 리서치, 프로토타이핑 및 개발팀 협업",
     "duration": "12개월 (진행 중)",
-    "images": [],
-    "roles": [],
+    "images": [
+      "/images/1793194150278-HEWhwYhbYAI7t2-.jpg"
+    ],
+    "roles": [
+      "Lead UX Designer"
+    ],
     "tools": [],
-    "thumbnail": "",
+    "thumbnail": "/images/1793194146843-HEWhwYhbYAI7t2-.jpg",
     "platform": ""
   },
   {
@@ -40,10 +44,14 @@
     "has_ongoing": true,
     "role": "Lead UX Designer — IoT 플랫폼 IA 설계, 터치 LCD UX 가이드라인 수립, 컴포넌트 시스템 구축",
     "duration": "18개월 (진행 중)",
-    "images": [],
-    "roles": [],
+    "images": [
+      "/images/1793192834166-bgbg.gif"
+    ],
+    "roles": [
+      "Lead UX Designer"
+    ],
     "tools": [],
-    "thumbnail": "",
+    "thumbnail": "/images/1793192596484-bgbg.gif",
     "platform": ""
   },
   {
