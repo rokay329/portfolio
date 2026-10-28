@@ -70,7 +70,12 @@ async function handleSavePost(request, env) {
   const authedEmail = request.headers.get('Cf-Access-Authenticated-User-Email');
   const allowedEmail = (env.ADMIN_EMAIL || '').toLowerCase();
   if (!authedEmail || !allowedEmail || authedEmail.toLowerCase() !== allowedEmail) {
-    return json({ error: 'Unauthorized' }, 403);
+    // 임시 디버그: 문제 해결 후 이 필드는 지울 것 (아래 두 값이 다른 이유를 확인하기 위함)
+    return json({
+      error: 'Unauthorized',
+      debug_receivedEmail: authedEmail || null,
+      debug_adminEmailIsSet: !!env.ADMIN_EMAIL
+    }, 403);
   }
 
   const token = env.GITHUB_TOKEN;
